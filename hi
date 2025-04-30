@@ -1,19 +1,34 @@
-public void returnBook(int borrowId) {
-    BorrowTransaction borrow = borrowRepository.findById(borrowId)
-        .orElseThrow(() -> new RuntimeException("Borrow transaction not found"));
+public void returnBookByMemberAndTitle(String memberName, String bookTitle) {
+    // 1. Get member by name
+    Member member = memberRepository.findByName(memberName)
+        .orElseThrow(() -> new RuntimeException("Member not found"));
 
+    // 2. Get book by title and status 'borrowed'
+    Book book = bookRepository.findByTitleAndStatus(bookTitle, "borrowed")
+        .orElseThrow(() -> new RuntimeException("Borrowed book not found"));
+
+    // 3. Get active borrow transaction
+    BorrowTransaction borrow = borrowRepository
+        .findByMemberAndBookAndStatus(member, book, "borrowed")
+        .orElseThrow(() -> new RuntimeException("Active borrow transaction not found"));
+
+    // 4. Update borrow status and return date
     borrow.setStatus("returned");
     borrow.setReturnDate(LocalDate.now());
     borrowRepository.save(borrow);
 
-    // Update book status
-    Book book = borrow.getBook();
+    // 5. Update book status
     book.setStatus("available");
     bookRepository.save(book);
 
-    // Increment available copies
+    // 6. Update available copies
     AvailableCount count = availableCountRepository.findByIsbn(book.getIsbn())
-        .orElseThrow(() -> new RuntimeException("Available copy info not found"));
+        .orElseThrow(() -> new RuntimeException("Available count not found"));
     count.setAvailableCopies(count.getAvailableCopies() + 1);
     availableCountRepository.save(count);
+}
+
+@PostMapping("/return")
+public void returnBook(@RequestParam String memberName, @RequestParam String bookTitle) {
+    borrowService.returnBookByMemberAndTitle(memberName, bookTitle);
 }
