@@ -1,13 +1,8 @@
-public BorrowTransaction borrowBookByBookId(int bookId, int memberId, BorrowRequest borrowRequest) {
-    BorrowTransaction borrow = new BorrowTransaction();
-
-    Book book = bookRepository.findById(bookId)
-            .orElseThrow(() -> new RuntimeException("Book not found"));
-
+public BorrowTransaction borrowBookByIsbn(String isbn, int memberId, BorrowRequest borrowRequest) {
     Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new RuntimeException("Member not found"));
 
-    // Check borrow limit (max 3 active borrowings with status "borrow")
+    // Check member borrow limit
     List<BorrowTransaction> activeBorrows = borrowRepository.findByMember(member).stream()
             .filter(b -> "borrow".equalsIgnoreCase(b.getStatus()))
             .toList();
@@ -16,23 +11,25 @@ public BorrowTransaction borrowBookByBookId(int bookId, int memberId, BorrowRequ
         throw new RuntimeException("Borrow limit exceeded. Member can borrow a maximum of 3 books.");
     }
 
-    // Check available copies
-    AvailableCount availableCount = availableCountRepository.findById(book.getIsbn())
-            .orElseThrow(() -> new RuntimeException("Available count not found for ISBN: " + book.getIsbn()));
+    // Fetch all books with the given ISBN
+    List<Book> books = bookRepository.findByIsbn(isbn);
 
-    if (availableCount.getAvailableCopies() <= 0) {
-        throw new RuntimeException("No available copies for this book");
+    // Find a copy that is not currently borrowed
+    for (Book book : books) {
+        boolean isBorrowed = borrowRepository.findByBook(book).stream()
+                .anyMatch(b -> "borrow".equalsIgnoreCase(b.getStatus()));
+        if (!isBorrowed) {
+            // Book is available
+            BorrowTransaction borrow = new BorrowTransaction();
+            borrow.setBook(book);
+            borrow.setMember(member);
+            borrow.setBorrowDate(borrowRequest.getBorrowDate());
+            borrow.setReturnDate(borrowRequest.getReturnDate());
+            borrow.setStatus(borrowRequest.getStatus());
+
+            return borrowRepository.save(borrow);
+        }
     }
 
-    // Decrease available copies
-    availableCount.setAvailableCopies(availableCount.getAvailableCopies() - 1);
-    availableCountRepository.save(availableCount);
-
-    borrow.setBook(book);
-    borrow.setMember(member);
-    borrow.setBorrowDate(borrowRequest.getBorrowDate());
-    borrow.setReturnDate(borrowRequest.getReturnDate());
-    borrow.setStatus(borrowRequest.getStatus());
-
-    return borrowRepository.save(borrow);
+    throw new RuntimeException("No available copies for ISBN: " + isbn);
 }
