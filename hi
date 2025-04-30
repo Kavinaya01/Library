@@ -1,35 +1,40 @@
-public BorrowTransaction borrowBookByIsbn(String isbn, int memberId, BorrowRequest borrowRequest) {
+public BorrowTransaction borrowBookByTitle(String title, int memberId) {
+    // 1. Get member
     Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new RuntimeException("Member not found"));
+        .orElseThrow(() -> new RuntimeException("Member not found"));
 
-    // Check member borrow limit
-    List<BorrowTransaction> activeBorrows = borrowRepository.findByMember(member).stream()
-            .filter(b -> "borrow".equalsIgnoreCase(b.getStatus()))
-            .toList();
+    // 2. Check active borrow count
+    List<BorrowTransaction> activeBorrows = borrowRepository
+        .findByMemberIdAndStatus(memberId, "borrowed");
 
     if (activeBorrows.size() >= 3) {
-        throw new RuntimeException("Borrow limit exceeded. Member can borrow a maximum of 3 books.");
+        throw new RuntimeException("Borrow limit exceeded. Member can borrow up to 3 books.");
     }
 
-    // Fetch all books with the given ISBN
-    List<Book> books = bookRepository.findByIsbn(isbn);
+    // 3. Get available book by title
+    Book book = bookRepository.findFirstByTitleAndStatus(title, "available")
+        .orElseThrow(() -> new RuntimeException("No available copy of this title"));
 
-    // Find a copy that is not currently borrowed
-    for (Book book : books) {
-        boolean isBorrowed = borrowRepository.findByBook(book).stream()
-                .anyMatch(b -> "borrow".equalsIgnoreCase(b.getStatus()));
-        if (!isBorrowed) {
-            // Book is available
-            BorrowTransaction borrow = new BorrowTransaction();
-            borrow.setBook(book);
-            borrow.setMember(member);
-            borrow.setBorrowDate(borrowRequest.getBorrowDate());
-            borrow.setReturnDate(borrowRequest.getReturnDate());
-            borrow.setStatus(borrowRequest.getStatus());
+    // 4. Update book status
+    book.setStatus("borrowed");
+    bookRepository.save(book);
 
-            return borrowRepository.save(borrow);
-        }
+    // 5. Decrement available copies
+    AvailableCount count = availableCountRepository.findByIsbn(book.getIsbn())
+        .orElseThrow(() -> new RuntimeException("Available copy info not found"));
+    if (count.getAvailableCopies() <= 0) {
+        throw new RuntimeException("No copies available to borrow");
     }
+    count.setAvailableCopies(count.getAvailableCopies() - 1);
+    availableCountRepository.save(count);
 
-    throw new RuntimeException("No available copies for ISBN: " + isbn);
+    // 6. Create and save borrow transaction
+    BorrowTransaction borrow = new BorrowTransaction();
+    borrow.setBook(book);
+    borrow.setMember(member);
+    borrow.setStatus("borrowed");
+    borrow.setBorrowDate(LocalDate.now());
+    borrow.setReturnDate(LocalDate.now().plusDays(14)); // 2-week default
+
+    return borrowRepository.save(borrow);
 }
