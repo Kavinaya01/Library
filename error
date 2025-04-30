@@ -1,0 +1,14 @@
+
+org.springframework.beans.factory.UnsatisfiedDependencyException: 
+Error creating bean with name 'authController': Unsatisfied dependency 
+expressed through field 'authService': Error creating bean with name
+ 'authService': Unsatisfied dependency expressed through field '
+memberRepository': Error creating bean with name 'memberRepository'
+ defined in com.cts.repository.MemberRepository defined in
+ @EnableJpaRepositories declared on JpaRepositoriesRegistrar.
+EnableJpaRepositoriesConfiguration: Could not create query for
+ public abstract java.util.Optional com.cts.repository.MemberRepository.
+findById(int); Reason: Failed to create query for method public abstract 
+java.util.Optional com.cts.repository.MemberRepository.findById(int);
+ No property 'id' found for type 'Member'
+
