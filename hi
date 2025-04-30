@@ -1,0 +1,38 @@
+public BorrowTransaction borrowBookByBookId(int bookId, int memberId, BorrowRequest borrowRequest) {
+    BorrowTransaction borrow = new BorrowTransaction();
+
+    Book book = bookRepository.findById(bookId)
+            .orElseThrow(() -> new RuntimeException("Book not found"));
+
+    Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new RuntimeException("Member not found"));
+
+    // Check borrow limit (max 3 active borrowings with status "borrow")
+    List<BorrowTransaction> activeBorrows = borrowRepository.findByMember(member).stream()
+            .filter(b -> "borrow".equalsIgnoreCase(b.getStatus()))
+            .toList();
+
+    if (activeBorrows.size() >= 3) {
+        throw new RuntimeException("Borrow limit exceeded. Member can borrow a maximum of 3 books.");
+    }
+
+    // Check available copies
+    AvailableCount availableCount = availableCountRepository.findById(book.getIsbn())
+            .orElseThrow(() -> new RuntimeException("Available count not found for ISBN: " + book.getIsbn()));
+
+    if (availableCount.getAvailableCopies() <= 0) {
+        throw new RuntimeException("No available copies for this book");
+    }
+
+    // Decrease available copies
+    availableCount.setAvailableCopies(availableCount.getAvailableCopies() - 1);
+    availableCountRepository.save(availableCount);
+
+    borrow.setBook(book);
+    borrow.setMember(member);
+    borrow.setBorrowDate(borrowRequest.getBorrowDate());
+    borrow.setReturnDate(borrowRequest.getReturnDate());
+    borrow.setStatus(borrowRequest.getStatus());
+
+    return borrowRepository.save(borrow);
+}
