@@ -24,10 +24,10 @@
     </nav>
 
     <div class="container-fluid mt-4">
-      <h1 class="mt-4">Dashboard</h1>
+      <h1 class="mt-4 dashboard-title">Dashboard</h1>
       <div class="row mt-4">
         <div class="col-md-3">
-          <div class="card text-white bg-primary mb-3">
+          <div class="card text-white bg-primary mb-3 card-box">
             <div class="card-body">
               <h5 class="card-title">Total Books</h5>
               <p class="card-text display-4">1240</p>
@@ -35,7 +35,7 @@
           </div>
         </div>
         <div class="col-md-3">
-          <div class="card text-white bg-success mb-3">
+          <div class="card text-white bg-success mb-3 card-box">
             <div class="card-body">
               <h5 class="card-title">Members</h5>
               <p class="card-text display-4">320</p>
@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="col-md-3">
-          <div class="card text-white bg-warning mb-3">
+          <div class="card text-white bg-warning mb-3 card-box">
             <div class="card-body">
               <h5 class="card-title">Issued Books</h5>
               <p class="card-text display-4">450</p>
@@ -51,7 +51,7 @@
           </div>
         </div>
         <div class="col-md-3">
-          <div class="card text-white bg-danger mb-3">
+          <div class="card text-white bg-danger mb-3 card-box">
             <div class="card-body">
               <h5 class="card-title">Overdue</h5>
               <p class="card-text display-4">15</p>
@@ -63,49 +63,67 @@
   </div>
 </div>
 
-<!-- Toggle Script -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const menuToggle = document.getElementById("menu-toggle");
-    const wrapper = document.getElementById("wrapper");
-    menuToggle.addEventListener("click", function () {
-      wrapper.classList.toggle("toggled");
-    });
-  });
-</script>
-
 <!-- dashboard.component.css -->
 <style>
-  #wrapper {
-    display: flex;
-    align-items: stretch;
-  }
+#wrapper {
+  display: flex;
+}
 
-  #sidebar-wrapper {
-    min-width: 250px;
-    max-width: 250px;
-  }
+#sidebar-wrapper {
+  min-width: 250px;
+  max-width: 250px;
+  background-color: #343a40;
+  color: white;
+}
 
-  #page-content-wrapper {
-    flex: 1;
-    padding: 20px;
-  }
+#page-content-wrapper {
+  flex: 1;
+  padding: 20px;
+}
 
-  #wrapper.toggled #sidebar-wrapper {
-    margin-left: -250px;
-  }
+#wrapper.toggled #sidebar-wrapper {
+  margin-left: -250px;
+}
 
-  .card-title {
-    font-size: 1.2rem;
-  }
+.card-box {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
 
-  .card-text {
-    font-weight: bold;
-  }
+.card-box:hover {
+  transform: scale(1.05);
+}
+
+.dashboard-title {
+  font-weight: bold;
+  font-size: 2rem;
+  opacity: 0;
+}
 </style>
 
-<!-- Add this to your angular.json styles and scripts -->
-<!--
+<!-- dashboard.component.ts -->
+import { Component, AfterViewInit } from '@angular/core';
+import gsap from 'gsap';
+
+@Component({
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
+})
+export class DashboardComponent implements AfterViewInit {
+  ngAfterViewInit() {
+    gsap.from(".dashboard-title", { duration: 1, y: -50, opacity: 0, ease: "bounce" });
+    gsap.from(".card-box", {
+      duration: 1,
+      opacity: 0,
+      stagger: 0.2,
+      y: 30,
+      ease: "power3.out"
+    });
+  }
+}
+
+<!-- angular.json snippet -->
 "styles": [
   "node_modules/bootstrap/dist/css/bootstrap.min.css",
   "src/styles.css"
@@ -113,4 +131,7 @@
 "scripts": [
   "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
 ]
--->
+
+<!-- Install GSAP via npm -->
+// Run this command in your terminal:
+npm install gsap
