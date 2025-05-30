@@ -1,34 +1,61 @@
-public void returnBookByMemberAndTitle(String memberName, String bookTitle) {
-    // 1. Get member by name
-    Member member = memberRepository.findByName(memberName)
-        .orElseThrow(() -> new RuntimeException("Member not found"));
+<div class="container-fluid p-0">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-transparent px-4">
+    <a class="navbar-brand text-white" href="#"><i class="bi bi-list"></i></a>
+    <div class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link text-white" href="#">Home</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="#">About</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="#">Team</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="#">Service</a></li>
+      </ul>
+    </div>
+  </nav>
 
-    // 2. Get book by title and status 'borrowed'
-    Book book = bookRepository.findByTitleAndStatus(bookTitle, "borrowed")
-        .orElseThrow(() -> new RuntimeException("Borrowed book not found"));
+  <!-- Hero Section -->
+  <div class="hero-section text-dark d-flex align-items-center px-5">
+    <div class="row w-100">
+      <div class="col-md-6 d-flex flex-column justify-content-center">
+        <h1 class="display-4 fw-bold">Web Design</h1>
+        <p class="text-muted">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vulputate orci at elit lobortis dictum.
+        </p>
+        <button class="btn btn-danger rounded-pill px-4">Get Started</button>
+      </div>
+      <div class="col-md-6 text-center">
+        <img src="assets/monitor-illustration.png" class="img-fluid" alt="Web Illustration">
+      </div>
+    </div>
+  </div>
+</div>
 
-    // 3. Get active borrow transaction
-    BorrowTransaction borrow = borrowRepository
-        .findByMemberAndBookAndStatus(member, book, "borrowed")
-        .orElseThrow(() -> new RuntimeException("Active borrow transaction not found"));
 
-    // 4. Update borrow status and return date
-    borrow.setStatus("returned");
-    borrow.setReturnDate(LocalDate.now());
-    borrowRepository.save(borrow);
-
-    // 5. Update book status
-    book.setStatus("available");
-    bookRepository.save(book);
-
-    // 6. Update available copies
-    AvailableCount count = availableCountRepository.findByIsbn(book.getIsbn())
-        .orElseThrow(() -> new RuntimeException("Available count not found"));
-    count.setAvailableCopies(count.getAvailableCopies() + 1);
-    availableCountRepository.save(count);
+.hero-section {
+  height: 100vh;
+  background: linear-gradient(to bottom right, #ff4b91, #8b2eff);
+  color: #fff;
 }
 
-@PostMapping("/return")
-public void returnBook(@RequestParam String memberName, @RequestParam String bookTitle) {
-    borrowService.returnBookByMemberAndTitle(memberName, bookTitle);
+.navbar .nav-link {
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.btn-danger {
+  background-color: #e94e77;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #d73c67;
+}
+
+img {
+  max-height: 300px;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
 }
