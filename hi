@@ -1,61 +1,273 @@
-<div class="container-fluid p-0">
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-transparent px-4">
-    <a class="navbar-brand text-white" href="#"><i class="bi bi-list"></i></a>
-    <div class="collapse navbar-collapse justify-content-end">
-      <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link text-white" href="#">Home</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="#">About</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="#">Team</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="#">Service</a></li>
+import { Component } from '@angular/core';
+import { BookService } from '../../../service/book/book.service';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-books',
+  standalone: false,
+  templateUrl: './books.component.html',
+  styleUrl: './books.component.css'
+})
+export class BooksComponent {
+  books: any[] = [];
+  filteredBooks: any[] = [];
+  
+  searchQuery: string = '';
+  selectedCategory: string = 'title'; 
+  selectedGenre: string = '';  
+  selectedAuthor: string = ''; 
+
+  genres: string[] = [];
+  authors: string[] = [];
+
+  bookForm = {
+    id: null,
+    title: '',
+    author: '',
+    genre: '',
+    isbn: '',
+    yearPublished: '',
+  };
+
+  isEditing: boolean = false;
+  showManageBooks: boolean = false; // ✅ Controls the visibility of the manage books card
+
+  constructor(private bookService: BookService) {}
+
+  ngOnInit() {
+    this.fetchBooks();
+  }
+
+  fetchBooks() {
+    this.bookService.getAllBooks(0).subscribe((data) => {
+      const bookMap = new Map();
+
+      data.content.forEach((book: any) => {
+        if (bookMap.has(book.title)) {
+          bookMap.get(book.title).availableCopies++;
+        } else {
+          bookMap.set(book.title, {
+            id: book.id,
+            title: book.title,
+            author: book.author,
+            genre: book.genre,
+            isbn: book.isbn,
+            yearPublished: book.yearPublished,
+            availableCopies: book.status === 'available' ? 1 : 0,
+            isFlipped: false,
+          });
+        }
+      });
+
+      this.books = Array.from(bookMap.values());
+      this.filteredBooks = this.books; 
+
+      this.genres = [...new Set(this.books.map(book => book.genre))];
+      this.authors = [...new Set(this.books.map(book => book.author))];
+    });
+  }
+
+  filterBooks() {
+    this.filteredBooks = this.books.filter((book) => {
+      const matchesSearch = book[this.selectedCategory]?.toLowerCase().includes(this.searchQuery.toLowerCase());
+      const matchesGenre = this.selectedGenre === '' || book.genre === this.selectedGenre;
+      const matchesAuthor = this.selectedAuthor === '' || book.author === this.selectedAuthor;
+      return matchesSearch && matchesGenre && matchesAuthor;
+    });
+  }
+
+  toggleFlip(book: any) {
+    book.isFlipped = !book.isFlipped;
+  }
+
+  addBook() {
+    console.log("Adding book:", this.bookForm); // ✅ Check form data
+    this.bookService.addBook(this.bookForm).subscribe({
+      next: (response) => {
+        console.log("API Response:", response.message);
+        alert(response.message);
+        this.fetchBooks();
+        this.resetForm();
+      },
+      error: (err) => {
+        console.error("Error adding book:", err);
+      }
+    });
+  }
+  
+  editBook(book: any) {
+    this.bookForm = { ...book };
+    this.isEditing = true;
+    this.showManageBooks = true; // ✅ Show manage books form when editing
+  }
+
+  updateBook() {
+    if (this.bookForm.id === null || this.bookForm.id === undefined) {
+      console.error("Cannot update book. ID is invalid.");
+      return;
+    }
+
+    this.bookService.updateBook(this.bookForm.id, this.bookForm).subscribe(() => {
+      this.fetchBooks();
+      this.resetForm();
+    });
+  }
+
+  deleteBook(id: number) {
+    this.bookService.deleteBook(id).subscribe(() => {
+      this.fetchBooks();
+    });
+  }
+
+  resetForm() {
+    this.bookForm = {
+      id: null,
+      title: '',
+      author: '',
+      genre: '',
+      isbn: '',
+      yearPublished: '',
+    };
+    this.isEditing = false;
+  }
+
+  toggleManageBooks() {
+    this.showManageBooks = !this.showManageBooks; // ✅ Show/hide manage books form
+  }
+}
+import { Component, OnInit } from '@angular/core';
+import { AdminService } from '../../../service/admin/admin.service';
+
+@Component({
+  selector: 'app-admin-dashboard',
+  standalone:false,
+  templateUrl: './admin-dashboard.component.html',
+  styleUrls: ['./admin-dashboard.component.css']
+})
+export class AdminDashboardComponent implements OnInit {
+  admin: any = {};
+
+  constructor(private adminService: AdminService) {}
+
+
+  ngOnInit(): void {
+    this.adminService.getAdminDetails().subscribe({
+      next: (data) => {
+        console.log('Admin data:', data); // 👈 Add this
+        this.admin = data;
+      },
+      error: (err) => {
+        console.error('Failed to load admin details', err);
+      }
+    });
+  }
+  
+    
+
+  logout(): void {
+    localStorage.removeItem('token');
+    // redirect to login
+  }
+} <!-- Header -->
+<header class="header d-flex justify-content-between align-items-center p-3 bg-primary text-white">
+    <h4 class="mb-0">Library Management System</h4>
+      <div class="dropdown">
+        <img src="assets/profile.png" class="rounded-circle" width="40" height="40" role="button" data-bs-toggle="dropdown" aria-expanded="false" />
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><h6 class="dropdown-header">Admin Details</h6></li>
+          <li><span class="dropdown-item-text">Name: {{ admin.name }}</span></li>
+          <li><span class="dropdown-item-text">Email: {{ admin.email }}</span></li>
+          <li><span class="dropdown-item-text">Phone: {{ admin.phone }}</span></li>
+        </ul>
+      </div>
+  </header>
+  
+  <!-- Sidebar + Content -->
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <nav class="sidebar bg-light p-3" style="width: 220px; height: 100vh;">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/admin-books">📚 Manage Books</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/members">👥 Manage Members</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/fines">💰 Fines</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-danger" (click)="logout()">🚪 Logout</a>
+        </li>
       </ul>
-    </div>
-  </nav>
-
-  <!-- Hero Section -->
-  <div class="hero-section text-dark d-flex align-items-center px-5">
-    <div class="row w-100">
-      <div class="col-md-6 d-flex flex-column justify-content-center">
-        <h1 class="display-4 fw-bold">Web Design</h1>
-        <p class="text-muted">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vulputate orci at elit lobortis dictum.
-        </p>
-        <button class="btn btn-danger rounded-pill px-4">Get Started</button>
-      </div>
-      <div class="col-md-6 text-center">
-        <img src="assets/monitor-illustration.png" class="img-fluid" alt="Web Illustration">
-      </div>
-    </div>
+    </nav>
+  
+    <!-- Main Content -->
+    <main class="p-4 flex-grow-1">
+      <router-outlet></router-outlet> 
+    </main>
   </div>
-</div>
+  import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { LoginComponent } from './component/login/login.component';
+import { RegisterComponent } from './component/register/register.component';
+import { BorrowComponent } from './component/borrow/borrow.component';
+import { AdminDashboardComponent } from './component/admin/admin-dashboard/admin-dashboard.component';
+import { MemberDashboardComponent } from './component/member-dashboard/member-dashboard.component';
+import { authGuard } from './guards/auth.guard';
+import { HomeComponent } from './component/home/home.component';
+import { BooksComponent } from './component/admin/books/books.component';
 
+const routes: Routes = [
+ 
+  { path: '', component: HomeComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [authGuard] },
+  { path: 'admin-books', component: BooksComponent,canActivate:[authGuard]},
+  { path: '**', redirectTo: '' } 
+];
 
-.hero-section {
-  height: 100vh;
-  background: linear-gradient(to bottom right, #ff4b91, #8b2eff);
-  color: #fff;
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
+import { Injectable } from '@angular/core';
+import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class BookService {
+  private baseUrl = 'http://localhost:2024/books';
+
+  constructor(private http: HttpClient) {}
+
+  getAllBooks(page: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/all/${page}`);
+  }
+
+  addBook(book: any): Observable<any> {
+    const token = localStorage.getItem("jwtToken");
+    const headers = new HttpHeaders().set("Authorization", `Bearer ${token}`);
+
+    return this.http.post(`${this.baseUrl}/add`, book, { headers });
+  }
+
+  updateBook(id: number, book: any): Observable<any> {
+    const token = localStorage.getItem("jwtToken");
+    const headers = new HttpHeaders().set("Authorization", `Bearer ${token}`);
+
+    return this.http.put(`${this.baseUrl}/update/${id}`, book, { headers });
+  }
+
+  deleteBook(id: number): Observable<any> {
+    const token = localStorage.getItem("jwtToken");
+    const headers = new HttpHeaders().set("Authorization", `Bearer ${token}`);
+
+    return this.http.delete(`${this.baseUrl}/delete/${id}`, { headers });
+  }
 }
 
-.navbar .nav-link {
-  font-weight: 500;
-  font-size: 14px;
-  text-transform: uppercase;
-}
-
-.btn-danger {
-  background-color: #e94e77;
-  border: none;
-}
-
-.btn-danger:hover {
-  background-color: #d73c67;
-}
-
-img {
-  max-height: 300px;
-}
-
-body {
-  font-family: 'Poppins', sans-serif;
-}
