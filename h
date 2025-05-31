@@ -1,87 +1,86 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+package com.cts.controller;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthService {
-  private apiUrl = 'http://localhost:2024/login';
-  private memberName: string | null = null;
+import com.cts.dto.LoginRequest;
+import com.cts.dto.MemberRequest;
+import com.cts.dto.AuthResponse;
+import com.cts.model.Admin;
+import com.cts.model.Member;
+import com.cts.security.JwtTokenUtil;
+import com.cts.service.AuthService;
+import com.cts.service.LoginService;
+import com.cts.service.MemberService;
 
-  constructor(private http: HttpClient) {}
+import lombok.extern.slf4j.Slf4j;
 
-  login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/member`, credentials).pipe(
-      tap((response: any) => {
-        this.storeToken(response.token);
-        this.setCurrentMemberName(response.memberName); // ✅ Store member name
-      })
-    );
-  }
+import java.util.Optional;
 
-  loginAdmin(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/admin`, credentials).pipe(
-      tap((response: any) => {
-        this.storeToken(response.token);
-        this.setCurrentMemberName(response.memberName); // ✅ Store admin name if needed
-      })
-    );
-  }
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
-  register(user: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, user);
-  }
+@Slf4j
+@RestController
+@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping("/login")
+public class AuthController {
 
-  storeToken(token: string): void {
-    localStorage.setItem('jwtToken', token);
-  }
+    @Autowired
+    private AuthService authService;
 
-  getToken(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('jwtToken');
+    @Autowired
+    private LoginService loginService;
+    @Autowired
+    private MemberService memberService;
+
+    @Autowired
+    private JwtTokenUtil jwtUtil;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/admin")
+    public ResponseEntity<?> adminLogin(@RequestBody LoginRequest loginRequest) {
+        Admin admin = authService.getAdminByEmail(loginRequest.getEmail());
+
+        if (admin != null && passwordEncoder.matches(loginRequest.getPassword(), admin.getPassword())) {
+            loginService.saveLogin(admin.getAdminId(), admin.getEmail(), "ADMIN");
+            String token = jwtUtil.generateToken(admin.getEmail(), "ROLE_ADMIN");
+            return ResponseEntity.ok(new AuthResponse(token,"ADMIN"));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid admin credentials!");
+        }
     }
-    return null;
-  }
 
-  removeToken(): void {
-    localStorage.removeItem('jwtToken');
-  }
+    @PostMapping("/member")
+    public ResponseEntity<?> memberLogin(@RequestBody LoginRequest loginRequest) {
+        Optional<Member> optionalMember = authService.getMemberByEmail(loginRequest.getEmail());
 
-  clearToken(): void {
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem('memberName'); // ✅ Clear member name too
-  }
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
 
-  // ✅ FIX: Store and persist member name correctly
-  setCurrentMemberName(name: string): void {
-    this.memberName = name;
-    localStorage.setItem('memberName', name);
-  }
+            if (passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
+                loginService.saveLogin(member.getMemberId(), member.getEmail(), "MEMBER");
+                String token = jwtUtil.generateToken(member.getEmail(), "ROLE_MEMBER");
+                return ResponseEntity.ok(new AuthResponse(token,"MEMBER"));
+            }
+        }
 
-  // ✅ FIX: Retrieve member name directly from localStorage
-  getCurrentMemberName(): string {
-    return localStorage.getItem('memberName') || '';
-  }
-
-  checkEmailExists(email: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.apiUrl}/check-email/${email}`);
-  }
-
-  checkPhoneExists(phone: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.apiUrl}/check-phone/${phone}`);
-  }
-
-  getUserRole(): string {
-    const token = this.getToken();
-    if (token) {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.role;
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid member credentials!");
     }
-    return '';
-  }
 
-  isAuthenticated(): boolean {
-    return typeof window !== 'undefined' && !!this.getToken();
-  }
+    @PostMapping("/register")
+    public ResponseEntity<?> registerMember(@RequestBody MemberRequest memberDTO) {
+        log.info("Registering member with email '{}'", memberDTO.getEmail());
+
+        // Encrypt the password before saving
+        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
+
+        Member registeredMember = memberService.registerMember(memberDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registeredMember);
+    }
+    
+
 }
+//baarathi
