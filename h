@@ -1,30 +1,34 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:2024/login'; // Adjust according to backend
-  private memberName: string | null = null; 
+  private apiUrl = 'http://localhost:2024/login';
+  private memberName: string | null = null;
 
   constructor(private http: HttpClient) {}
 
-  
   login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/member`, credentials); // For members
+    return this.http.post(`${this.apiUrl}/member`, credentials).pipe(
+      tap((response: any) => {
+        this.storeToken(response.token);
+        this.setCurrentMemberName(response.memberName); // ✅ Store member name
+      })
+    );
   }
 
- 
-loginAdmin(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/admin`, credentials).pipe(
-      tap((response: any) => {
-        this.storeToken(response.token);
-      })
-    );
+  loginAdmin(credentials: { email: string; password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/admin`, credentials).pipe(
+      tap((response: any) => {
+        this.storeToken(response.token);
+        this.setCurrentMemberName(response.memberName); // ✅ Store admin name if needed
+      })
+    );
   }
-  
+
   register(user: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, user);
   }
@@ -44,26 +48,26 @@ loginAdmin(credentials: { email: string; password: string }): Observable<any> {
     localStorage.removeItem('jwtToken');
   }
 
-  
+  clearToken(): void {
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('memberName'); // ✅ Clear member name too
+  }
 
-  clearToken() {
-    localStorage.removeItem('authToken');
-    }
+  // ✅ FIX: Store and persist member name correctly
+  setCurrentMemberName(name: string): void {
+    this.memberName = name;
+    localStorage.setItem('memberName', name);
+  }
 
-    setCurrentMemberName(name: string) {
-      this.memberName = name;
-      localStorage.setItem('memberName', name); // Optional: Persist name in localStorage
-    }
-  
-    getCurrentMemberName(): string {
-      const member = JSON.parse(localStorage.getItem('memberName') ||'{}');
-      return member ? this.memberName || '' ;
-    }
+  // ✅ FIX: Retrieve member name directly from localStorage
+  getCurrentMemberName(): string {
+    return localStorage.getItem('memberName') || '';
+  }
 
   checkEmailExists(email: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.apiUrl}/check-email/${email}`);
   }
-  
+
   checkPhoneExists(phone: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.apiUrl}/check-phone/${phone}`);
   }
@@ -72,7 +76,7 @@ loginAdmin(credentials: { email: string; password: string }): Observable<any> {
     const token = this.getToken();
     if (token) {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.role; // Extract role from JWT token
+      return payload.role;
     }
     return '';
   }
@@ -80,5 +84,4 @@ loginAdmin(credentials: { email: string; password: string }): Observable<any> {
   isAuthenticated(): boolean {
     return typeof window !== 'undefined' && !!this.getToken();
   }
-  
 }
