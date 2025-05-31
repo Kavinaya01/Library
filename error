@@ -1,14 +1,7 @@
-
-org.springframework.beans.factory.UnsatisfiedDependencyException: 
-Error creating bean with name 'authController': Unsatisfied dependency 
-expressed through field 'authService': Error creating bean with name
- 'authService': Unsatisfied dependency expressed through field '
-memberRepository': Error creating bean with name 'memberRepository'
- defined in com.cts.repository.MemberRepository defined in
- @EnableJpaRepositories declared on JpaRepositoriesRegistrar.
-EnableJpaRepositoriesConfiguration: Could not create query for
- public abstract java.util.Optional com.cts.repository.MemberRepository.
-findById(int); Reason: Failed to create query for method public abstract 
-java.util.Optional com.cts.repository.MemberRepository.findById(int);
- No property 'id' found for type 'Member'
-
+Access to XMLHttpRequest at 'http://localhost:2024/admin/details' from origin 'http://localhost:4200' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+admin-dashboard.component.ts:23  Failed to load admin details HttpErrorResponse
+error @ admin-dashboard.component.ts:23
+:2024/admin/details:1 
+            
+            
+            Failed to load resource: net::ERR_FAILED
