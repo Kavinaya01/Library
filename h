@@ -1,657 +1,84 @@
-http://localhost:2024/borrow/C/undefined 401 (Unauthorized)
-scheduleTask @ zone.js:2182
-scheduleTask @ zone.js:417
-onScheduleTask @ core.mjs:6065
-scheduleTask @ zone.js:411
-onScheduleTask @ zone.js:273
-scheduleTask @ zone.js:411
-scheduleTask @ zone.js:207
-scheduleMacroTask @ zone.js:230
-scheduleMacroTaskWithCurrentZone @ zone.js:723
-(anonymous) @ zone.js:2221
-proto.<computed> @ zone.js:1038
-(anonymous) @ module-z3bvLlVg.mjs:2524
-Observable2._trySubscribe @ Observable.js:33
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ switchMap.js:16
-OperatorSubscriber2._this._next @ OperatorSubscriber.js:14
-Subscriber2.next @ Subscriber.js:32
-(anonymous) @ innerFrom.js:51
-Observable2._trySubscribe @ Observable.js:33
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ switchMap.js:12
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ finalize.js:5
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ finalize.js:5
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-doInnerSub @ mergeInternals.js:21
-outerNext @ mergeInternals.js:15
-OperatorSubscriber2._this._next @ OperatorSubscriber.js:14
-Subscriber2.next @ Subscriber.js:32
-(anonymous) @ innerFrom.js:51
-Observable2._trySubscribe @ Observable.js:33
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-mergeInternals @ mergeInternals.js:54
-(anonymous) @ mergeMap.js:20
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ filter.js:6
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ map.js:6
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ catchError.js:9
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-borrowBook @ view-books.component.ts:106
-ViewBooksComponent_div_23_Template_button_click_8_listener @ view-books.component.html:32
-executeListenerWithErrorHandling @ core.mjs:29299
-wrapListenerIn_markDirtyAndPreventDefault @ core.mjs:29282
-(anonymous) @ dom_renderer-DGKzginR.mjs:709
-invokeTask @ zone.js:431
-(anonymous) @ core.mjs:6070
-onInvokeTask @ core.mjs:6070
-invokeTask @ zone.js:430
-onInvokeTask @ core.mjs:6390
-invokeTask @ zone.js:430
-runTask @ zone.js:161
-invokeTask @ zone.js:515
-invokeTask @ zone.js:1141
-globalCallback @ zone.js:1172
-globalZoneAwareCallback @ zone.js:1205
-Zone - HTMLButtonElement.addEventListener:click
-onScheduleTask @ core.mjs:6064
-scheduleTask @ zone.js:411
-onScheduleTask @ zone.js:273
-scheduleTask @ zone.js:411
-scheduleTask @ zone.js:207
-scheduleEventTask @ zone.js:233
-(anonymous) @ zone.js:1498
-addEventListener @ browser-D-u-fknz.mjs:164
-addEventListener @ dom_renderer-DGKzginR.mjs:49
-listen @ dom_renderer-DGKzginR.mjs:691
-listenerInternal @ core.mjs:29478
-ɵɵlistener @ core.mjs:29362
-ViewBooksComponent_div_23_Template @ view-books.component.html:32
-executeTemplate @ core.mjs:12074
-renderView @ core.mjs:12560
-createAndRenderEmbeddedLView @ core.mjs:12627
-createEmbeddedViewImpl @ core.mjs:14518
-createEmbeddedView @ core.mjs:17717
-(anonymous) @ common_module-Dx7dWex5.mjs:2762
-forEachOperation @ core.mjs:36169
-_applyChanges @ common_module-Dx7dWex5.mjs:2757
-ngDoCheck @ common_module-Dx7dWex5.mjs:2752
-callHookInternal @ core.mjs:4140
-callHook @ core.mjs:4167
-callHooks @ core.mjs:4124
-executeCheckHooks @ core.mjs:4061
-refreshView @ core.mjs:13684
-detectChangesInView @ core.mjs:13887
-detectChangesInViewIfAttached @ core.mjs:13849
-detectChangesInComponent @ core.mjs:13837
-detectChangesInChildComponents @ core.mjs:13905
-refreshView @ core.mjs:13728
-detectChangesInView @ core.mjs:13887
-detectChangesInViewIfAttached @ core.mjs:13849
-detectChangesInEmbeddedViews @ core.mjs:13807
-refreshView @ core.mjs:13703
-detectChangesInView @ core.mjs:13887
-detectChangesInViewIfAttached @ core.mjs:13849
-detectChangesInComponent @ core.mjs:13837
-detectChangesInChildComponents @ core.mjs:13905
-refreshView @ core.mjs:13728
-detectChangesInView @ core.mjs:13887
-detectChangesInViewWhileDirty @ core.mjs:13595
-detectChangesInternal @ core.mjs:13579
-detectChangesInViewIfRequired @ core.mjs:23284
-synchronizeOnce @ core.mjs:23111
-synchronize @ core.mjs:23080
-tickImpl @ core.mjs:23049
-_tick @ core.mjs:23038
-tick @ core.mjs:23027
-(anonymous) @ core.mjs:33949
-invoke @ zone.js:398
-onInvoke @ core.mjs:6401
-invoke @ zone.js:397
-run @ zone.js:113
-run @ core.mjs:6253
-next @ core.mjs:33948
-ConsumerObserver2.next @ Subscriber.js:90
-Subscriber2._next @ Subscriber.js:59
-Subscriber2.next @ Subscriber.js:32
-(anonymous) @ Subject.js:41
-errorContext @ errorContext.js:23
-Subject2.next @ Subject.js:31
-emit @ core.mjs:5937
-checkStable @ core.mjs:6320
-(anonymous) @ core.mjs:6356
-(anonymous) @ core.mjs:6043
-timer @ zone.js:1809
-invokeTask @ zone.js:431
-runTask @ zone.js:161
-invokeTask @ zone.js:515
-ZoneTask.invoke @ zone.js:504
-data.args.<computed> @ zone.js:1778
-requestAnimationFrame
-scheduleTask @ zone.js:1780
-scheduleTask @ zone.js:417
-scheduleTask @ zone.js:207
-scheduleMacroTask @ zone.js:230
-scheduleMacroTaskWithCurrentZone @ zone.js:723
-(anonymous) @ zone.js:1834
-proto.<computed> @ zone.js:1038
-scheduleCallbackWithRafRace @ core.mjs:6042
-scheduleCheckStable @ core.mjs:6352
-(anonymous) @ core.mjs:6366
-invoke @ zone.js:398
-run @ zone.js:113
-delayChangeDetectionForEvents @ core.mjs:6365
-delayChangeDetectionForEventsDelegate @ core.mjs:6373
-onInvokeTask @ core.mjs:6393
-invokeTask @ zone.js:430
-runTask @ zone.js:161
-invokeTask @ zone.js:515
-invokeTask @ zone.js:1141
-globalCallback @ zone.js:1184
-globalZoneAwareCallback @ zone.js:1205
-XMLHttpRequest.send
-scheduleTask @ zone.js:2182
-scheduleTask @ zone.js:417
-onScheduleTask @ core.mjs:6065
-scheduleTask @ zone.js:411
-onScheduleTask @ zone.js:273
-scheduleTask @ zone.js:411
-scheduleTask @ zone.js:207
-scheduleMacroTask @ zone.js:230
-scheduleMacroTaskWithCurrentZone @ zone.js:723
-(anonymous) @ zone.js:2221
-proto.<computed> @ zone.js:1038
-(anonymous) @ module-z3bvLlVg.mjs:2524
-Observable2._trySubscribe @ Observable.js:33
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ switchMap.js:16
-OperatorSubscriber2._this._next @ OperatorSubscriber.js:14
-Subscriber2.next @ Subscriber.js:32
-(anonymous) @ innerFrom.js:51
-Observable2._trySubscribe @ Observable.js:33
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ switchMap.js:12
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ tap.js:15
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ finalize.js:5
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ finalize.js:5
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-doInnerSub @ mergeInternals.js:21
-outerNext @ mergeInternals.js:15
-OperatorSubscriber2._this._next @ OperatorSubscriber.js:14
-Subscriber2.next @ Subscriber.js:32
-(anonymous) @ innerFrom.js:51
-Observable2._trySubscribe @ Observable.js:33
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-mergeInternals @ mergeInternals.js:54
-(anonymous) @ mergeMap.js:20
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ filter.js:6
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ map.js:6
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-fetchBooks @ view-books.component.ts:41
-ngOnInit @ view-books.component.ts:37
-callHookInternal @ core.mjs:4140
-callHook @ core.mjs:4164
-callHooks @ core.mjs:4124
-executeInitAndCheckHooks @ core.mjs:4079
-refreshView @ core.mjs:13689
-detectChangesInView @ core.mjs:13887
-detectChangesInViewIfAttached @ core.mjs:13849
-detectChangesInEmbeddedViews @ core.mjs:13807
-refreshView @ core.mjs:13703
-detectChangesInView @ core.mjs:13887
-detectChangesInViewIfAttached @ core.mjs:13849
-detectChangesInComponent @ core.mjs:13837
-detectChangesInChildComponents @ core.mjs:13905
-refreshView @ core.mjs:13728
-detectChangesInView @ core.mjs:13887
-detectChangesInViewWhileDirty @ core.mjs:13595
-detectChangesInternal @ core.mjs:13579
-detectChangesInViewIfRequired @ core.mjs:23284
-synchronizeOnce @ core.mjs:23111
-synchronize @ core.mjs:23080
-tickImpl @ core.mjs:23049
-_tick @ core.mjs:23038
-tick @ core.mjs:23027
-(anonymous) @ core.mjs:33949
-invoke @ zone.js:398
-onInvoke @ core.mjs:6401
-invoke @ zone.js:397
-run @ zone.js:113
-run @ core.mjs:6253
-next @ core.mjs:33948
-ConsumerObserver2.next @ Subscriber.js:90
-Subscriber2._next @ Subscriber.js:59
-Subscriber2.next @ Subscriber.js:32
-(anonymous) @ Subject.js:41
-errorContext @ errorContext.js:23
-Subject2.next @ Subject.js:31
-emit @ core.mjs:5937
-checkStable @ core.mjs:6320
-onHasTask @ core.mjs:6427
-hasTask @ zone.js:451
-_updateTaskCount @ zone.js:471
-_updateTaskCount @ zone.js:266
-runTask @ zone.js:179
-drainMicroTaskQueue @ zone.js:612
-Promise.then
-nativeScheduleMicroTask @ zone.js:588
-scheduleMicroTask @ zone.js:599
-scheduleTask @ zone.js:420
-scheduleTask @ zone.js:207
-scheduleMicroTask @ zone.js:227
-scheduleResolveOrReject @ zone.js:2527
-then @ zone.js:2732
-bootstrapModule @ core.mjs:35028
-(anonymous) @ main.ts:4
-borrow.service.ts:18  Borrow Service Error: HttpErrorResponse {headers: _HttpHeaders, status: 401, statusText: 'OK', url: 'http://localhost:2024/borrow/C/undefined', ok: false, …}
-(anonymous) @ borrow.service.ts:18
-(anonymous) @ catchError.js:10
-OperatorSubscriber2._this._error @ OperatorSubscriber.js:21
-Subscriber2.error @ Subscriber.js:40
-Subscriber2._error @ Subscriber.js:63
-Subscriber2.error @ Subscriber.js:40
-Subscriber2._error @ Subscriber.js:63
-Subscriber2.error @ Subscriber.js:40
-Subscriber2._error @ Subscriber.js:63
-Subscriber2.error @ Subscriber.js:40
-Subscriber2._error @ Subscriber.js:63
-Subscriber2.error @ Subscriber.js:40
-onLoad @ module-z3bvLlVg.mjs:2435
-invokeTask @ zone.js:431
-(anonymous) @ core.mjs:6070
-onInvokeTask @ core.mjs:6070
-invokeTask @ zone.js:430
-onInvokeTask @ core.mjs:6390
-invokeTask @ zone.js:430
-runTask @ zone.js:161
-invokeTask @ zone.js:515
-invokeTask @ zone.js:1141
-globalCallback @ zone.js:1184
-globalZoneAwareCallback @ zone.js:1205
-Zone - XMLHttpRequest.addEventListener:load
-onScheduleTask @ core.mjs:6064
-scheduleTask @ zone.js:411
-onScheduleTask @ zone.js:273
-scheduleTask @ zone.js:411
-scheduleTask @ zone.js:207
-scheduleEventTask @ zone.js:233
-(anonymous) @ zone.js:1498
-(anonymous) @ module-z3bvLlVg.mjs:2510
-Observable2._trySubscribe @ Observable.js:33
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ switchMap.js:16
-OperatorSubscriber2._this._next @ OperatorSubscriber.js:14
-Subscriber2.next @ Subscriber.js:32
-(anonymous) @ innerFrom.js:51
-Observable2._trySubscribe @ Observable.js:33
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ switchMap.js:12
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ finalize.js:5
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ finalize.js:5
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-doInnerSub @ mergeInternals.js:21
-outerNext @ mergeInternals.js:15
-OperatorSubscriber2._this._next @ OperatorSubscriber.js:14
-Subscriber2.next @ Subscriber.js:32
-(anonymous) @ innerFrom.js:51
-Observable2._trySubscribe @ Observable.js:33
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-mergeInternals @ mergeInternals.js:54
-(anonymous) @ mergeMap.js:20
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ filter.js:6
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ map.js:6
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ catchError.js:9
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-borrowBook @ view-books.component.ts:106
-ViewBooksComponent_div_23_Template_button_click_8_listener @ view-books.component.html:32
-executeListenerWithErrorHandling @ core.mjs:29299
-wrapListenerIn_markDirtyAndPreventDefault @ core.mjs:29282
-(anonymous) @ dom_renderer-DGKzginR.mjs:709
-invokeTask @ zone.js:431
-(anonymous) @ core.mjs:6070
-onInvokeTask @ core.mjs:6070
-invokeTask @ zone.js:430
-onInvokeTask @ core.mjs:6390
-invokeTask @ zone.js:430
-runTask @ zone.js:161
-invokeTask @ zone.js:515
-invokeTask @ zone.js:1141
-globalCallback @ zone.js:1172
-globalZoneAwareCallback @ zone.js:1205
-Zone - HTMLButtonElement.addEventListener:click
-onScheduleTask @ core.mjs:6064
-scheduleTask @ zone.js:411
-onScheduleTask @ zone.js:273
-scheduleTask @ zone.js:411
-scheduleTask @ zone.js:207
-scheduleEventTask @ zone.js:233
-(anonymous) @ zone.js:1498
-addEventListener @ browser-D-u-fknz.mjs:164
-addEventListener @ dom_renderer-DGKzginR.mjs:49
-listen @ dom_renderer-DGKzginR.mjs:691
-listenerInternal @ core.mjs:29478
-ɵɵlistener @ core.mjs:29362
-ViewBooksComponent_div_23_Template @ view-books.component.html:32
-executeTemplate @ core.mjs:12074
-renderView @ core.mjs:12560
-createAndRenderEmbeddedLView @ core.mjs:12627
-createEmbeddedViewImpl @ core.mjs:14518
-createEmbeddedView @ core.mjs:17717
-(anonymous) @ common_module-Dx7dWex5.mjs:2762
-forEachOperation @ core.mjs:36169
-_applyChanges @ common_module-Dx7dWex5.mjs:2757
-ngDoCheck @ common_module-Dx7dWex5.mjs:2752
-callHookInternal @ core.mjs:4140
-callHook @ core.mjs:4167
-callHooks @ core.mjs:4124
-executeCheckHooks @ core.mjs:4061
-refreshView @ core.mjs:13684
-detectChangesInView @ core.mjs:13887
-detectChangesInViewIfAttached @ core.mjs:13849
-detectChangesInComponent @ core.mjs:13837
-detectChangesInChildComponents @ core.mjs:13905
-refreshView @ core.mjs:13728
-detectChangesInView @ core.mjs:13887
-detectChangesInViewIfAttached @ core.mjs:13849
-detectChangesInEmbeddedViews @ core.mjs:13807
-refreshView @ core.mjs:13703
-detectChangesInView @ core.mjs:13887
-detectChangesInViewIfAttached @ core.mjs:13849
-detectChangesInComponent @ core.mjs:13837
-detectChangesInChildComponents @ core.mjs:13905
-refreshView @ core.mjs:13728
-detectChangesInView @ core.mjs:13887
-detectChangesInViewWhileDirty @ core.mjs:13595
-detectChangesInternal @ core.mjs:13579
-detectChangesInViewIfRequired @ core.mjs:23284
-synchronizeOnce @ core.mjs:23111
-synchronize @ core.mjs:23080
-tickImpl @ core.mjs:23049
-_tick @ core.mjs:23038
-tick @ core.mjs:23027
-(anonymous) @ core.mjs:33949
-invoke @ zone.js:398
-onInvoke @ core.mjs:6401
-invoke @ zone.js:397
-run @ zone.js:113
-run @ core.mjs:6253
-next @ core.mjs:33948
-ConsumerObserver2.next @ Subscriber.js:90
-Subscriber2._next @ Subscriber.js:59
-Subscriber2.next @ Subscriber.js:32
-(anonymous) @ Subject.js:41
-errorContext @ errorContext.js:23
-Subject2.next @ Subject.js:31
-emit @ core.mjs:5937
-checkStable @ core.mjs:6320
-(anonymous) @ core.mjs:6356
-(anonymous) @ core.mjs:6043
-timer @ zone.js:1809
-invokeTask @ zone.js:431
-runTask @ zone.js:161
-invokeTask @ zone.js:515
-ZoneTask.invoke @ zone.js:504
-data.args.<computed> @ zone.js:1778
-requestAnimationFrame
-scheduleTask @ zone.js:1780
-scheduleTask @ zone.js:417
-scheduleTask @ zone.js:207
-scheduleMacroTask @ zone.js:230
-scheduleMacroTaskWithCurrentZone @ zone.js:723
-(anonymous) @ zone.js:1834
-proto.<computed> @ zone.js:1038
-scheduleCallbackWithRafRace @ core.mjs:6042
-scheduleCheckStable @ core.mjs:6352
-(anonymous) @ core.mjs:6366
-invoke @ zone.js:398
-run @ zone.js:113
-delayChangeDetectionForEvents @ core.mjs:6365
-delayChangeDetectionForEventsDelegate @ core.mjs:6373
-onInvokeTask @ core.mjs:6393
-invokeTask @ zone.js:430
-runTask @ zone.js:161
-invokeTask @ zone.js:515
-invokeTask @ zone.js:1141
-globalCallback @ zone.js:1184
-globalZoneAwareCallback @ zone.js:1205
-XMLHttpRequest.send
-scheduleTask @ zone.js:2182
-scheduleTask @ zone.js:417
-onScheduleTask @ core.mjs:6065
-scheduleTask @ zone.js:411
-onScheduleTask @ zone.js:273
-scheduleTask @ zone.js:411
-scheduleTask @ zone.js:207
-scheduleMacroTask @ zone.js:230
-scheduleMacroTaskWithCurrentZone @ zone.js:723
-(anonymous) @ zone.js:2221
-proto.<computed> @ zone.js:1038
-(anonymous) @ module-z3bvLlVg.mjs:2524
-Observable2._trySubscribe @ Observable.js:33
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ switchMap.js:16
-OperatorSubscriber2._this._next @ OperatorSubscriber.js:14
-Subscriber2.next @ Subscriber.js:32
-(anonymous) @ innerFrom.js:51
-Observable2._trySubscribe @ Observable.js:33
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ switchMap.js:12
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ tap.js:15
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ finalize.js:5
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ finalize.js:5
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-doInnerSub @ mergeInternals.js:21
-outerNext @ mergeInternals.js:15
-OperatorSubscriber2._this._next @ OperatorSubscriber.js:14
-Subscriber2.next @ Subscriber.js:32
-(anonymous) @ innerFrom.js:51
-Observable2._trySubscribe @ Observable.js:33
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-mergeInternals @ mergeInternals.js:54
-(anonymous) @ mergeMap.js:20
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ filter.js:6
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-(anonymous) @ map.js:6
-(anonymous) @ lift.js:10
-(anonymous) @ Observable.js:27
-errorContext @ errorContext.js:23
-Observable2.subscribe @ Observable.js:23
-fetchBooks @ view-books.component.ts:41
-ngOnInit @ view-books.component.ts:37
-callHookInternal @ core.mjs:4140
-callHook @ core.mjs:4164
-callHooks @ core.mjs:4124
-executeInitAndCheckHooks @ core.mjs:4079
-refreshView @ core.mjs:13689
-detectChangesInView @ core.mjs:13887
-detectChangesInViewIfAttached @ core.mjs:13849
-detectChangesInEmbeddedViews @ core.mjs:13807
-refreshView @ core.mjs:13703
-detectChangesInView @ core.mjs:13887
-detectChangesInViewIfAttached @ core.mjs:13849
-detectChangesInComponent @ core.mjs:13837
-detectChangesInChildComponents @ core.mjs:13905
-refreshView @ core.mjs:13728
-detectChangesInView @ core.mjs:13887
-detectChangesInViewWhileDirty @ core.mjs:13595
-detectChangesInternal @ core.mjs:13579
-detectChangesInViewIfRequired @ core.mjs:23284
-synchronizeOnce @ core.mjs:23111
-synchronize @ core.mjs:23080
-tickImpl @ core.mjs:23049
-_tick @ core.mjs:23038
-tick @ core.mjs:23027
-(anonymous) @ core.mjs:33949
-invoke @ zone.js:398
-onInvoke @ core.mjs:6401
-invoke @ zone.js:397
-run @ zone.js:113
-run @ core.mjs:6253
-next @ core.mjs:33948
-ConsumerObserver2.next @ Subscriber.js:90
-Subscriber2._next @ Subscriber.js:59
-Subscriber2.next @ Subscriber.js:32
-(anonymous) @ Subject.js:41
-errorContext @ errorContext.js:23
-Subject2.next @ Subject.js:31
-emit @ core.mjs:5937
-checkStable @ core.mjs:6320
-onHasTask @ core.mjs:6427
-hasTask @ zone.js:451
-_updateTaskCount @ zone.js:471
-_updateTaskCount @ zone.js:266
-runTask @ zone.js:179
-drainMicroTaskQueue @ zone.js:612
-Promise.then
-nativeScheduleMicroTask @ zone.js:588
-scheduleMicroTask @ zone.js:599
-scheduleTask @ zone.js:420
-scheduleTask @ zone.js:207
-scheduleMicroTask @ zone.js:227
-scheduleResolveOrReject @ zone.js:2527
-then @ zone.js:2732
-bootstrapModule @ core.mjs:35028
-(anonymous) @ main.ts:4
-view-books.component.ts:118 Member undefined
-view-books.component.ts:119  Borrow API Error: Error: Unknown error
-    at borrow.service.ts:19:33
-    at Observable2.init [as _subscribe] (throwError.js:8:29)
-    at Observable2._trySubscribe (Observable.js:33:19)
-    at Observable.js:27:115
-    at errorContext (errorContext.js:23:5)
-    at Observable2.subscribe (Observable.js:23:5)
-    at catchError.js:14:23
-    at OperatorSubscriber2._this._error (OperatorSubscriber.js:21:9)
-    at Subscriber2.error (Subscriber.js:40:12)
-    at Subscriber2._error (Subscriber.js:63:24)
-{
-    "ReturnDate": "2025-06-14",
-    "Messages": "Book borrowed successfully!",
-    "BorrowId": 14,
-    "MemberName": "Lakshmi",
-    "BookTitle": "Java",
-    "BorrowDate": "2025-05-31"
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs';
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+  private apiUrl = 'http://localhost:2024/login'; // Adjust according to backend
+  private memberName: string | null = null; 
+
+  constructor(private http: HttpClient) {}
+
+  
+  login(credentials: { email: string; password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/member`, credentials); // For members
+  }
+
+ 
+loginAdmin(credentials: { email: string; password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/admin`, credentials).pipe(
+      tap((response: any) => {
+        this.storeToken(response.token);
+      })
+    );
+  }
+  
+  register(user: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, user);
+  }
+
+  storeToken(token: string): void {
+    localStorage.setItem('jwtToken', token);
+  }
+
+  getToken(): string | null {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('jwtToken');
+    }
+    return null;
+  }
+
+  removeToken(): void {
+    localStorage.removeItem('jwtToken');
+  }
+
+  
+
+  clearToken() {
+    localStorage.removeItem('authToken');
+    }
+
+    setCurrentMemberName(name: string) {
+      this.memberName = name;
+      localStorage.setItem('memberName', name); // Optional: Persist name in localStorage
+    }
+  
+    getCurrentMemberName(): string {
+      const member = JSON.parse(localStorage.getItem('memberName') ||'{}');
+      return member ? this.memberName || '' ;
+    }
+
+  checkEmailExists(email: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/check-email/${email}`);
+  }
+  
+  checkPhoneExists(phone: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/check-phone/${phone}`);
+  }
+
+  getUserRole(): string {
+    const token = this.getToken();
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.role; // Extract role from JWT token
+    }
+    return '';
+  }
+
+  isAuthenticated(): boolean {
+    return typeof window !== 'undefined' && !!this.getToken();
+  }
+  
 }
