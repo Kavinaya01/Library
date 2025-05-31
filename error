@@ -1,4 +1,44 @@
-Access to XMLHttpRequest at 'http://localhost:2024/books/add' from origin 'http://localhost:4200' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+admin-dashboard:1  Access to XMLHttpRequest at 'http://localhost:2024/admin/details' from origin 'http://localhost:4200' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+admin-dashboard.component.ts:23  Failed to load admin details HttpErrorResponse {headers: _HttpHeaders, status: 0, statusText: 'Unknown Error', url: 'http://localhost:2024/admin/details', ok: false, …}
+error @ admin-dashboard.component.ts:23
+ConsumerObserver2.error @ Subscriber.js:100
+Subscriber2._error @ Subscriber.js:63
+Subscriber2.error @ Subscriber.js:40
+Subscriber2._error @ Subscriber.js:63
+Subscriber2.error @ Subscriber.js:40
+Subscriber2._error @ Subscriber.js:63
+Subscriber2.error @ Subscriber.js:40
+Subscriber2._error @ Subscriber.js:63
+Subscriber2.error @ Subscriber.js:40
+Subscriber2._error @ Subscriber.js:63
+Subscriber2.error @ Subscriber.js:40
+onError @ module-z3bvLlVg.mjs:2458
+invokeTask @ zone.js:431
+(anonymous) @ core.mjs:6070
+onInvokeTask @ core.mjs:6070
+invokeTask @ zone.js:430
+onInvokeTask @ core.mjs:6390
+invokeTask @ zone.js:430
+runTask @ zone.js:161
+invokeTask @ zone.js:515
+invokeTask @ zone.js:1141
+globalCallback @ zone.js:1172
+globalZoneAwareCallback @ zone.js:1205
+:2024/admin/details:1 
+            
+            
+            Failed to load resource: net::ERR_FAILED
+admin-dashboard:1 
+            
+            
+            Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
+books.component.ts:84 Adding book: {id: null, title: 'C', author: 'Dennis', genre: 'Programming', isbn: '1234567891', …}
+admin-books:1  Access to XMLHttpRequest at 'http://localhost:2024/books/add' from origin 'http://localhost:4200' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
 books.component.ts:93  Error adding book: HttpErrorResponse {headers: _HttpHeaders, status: 0, statusText: 'Unknown Error', url: 'http://localhost:2024/books/add', ok: false, …}
 error @ books.component.ts:93
 ConsumerObserver2.error @ Subscriber.js:100
@@ -86,7 +126,7 @@ Observable2.subscribe @ Observable.js:23
 errorContext @ errorContext.js:23
 Observable2.subscribe @ Observable.js:23
 addBook @ books.component.ts:85
-BooksComponent_div_5_Template_button_click_13_listener @ books.component.ts:19
+BooksComponent_div_5_Template_button_click_13_listener @ books.component.html:26
 executeListenerWithErrorHandling @ core.mjs:29299
 wrapListenerIn_markDirtyAndPreventDefault @ core.mjs:29282
 (anonymous) @ dom_renderer-DGKzginR.mjs:709
@@ -114,7 +154,7 @@ addEventListener @ dom_renderer-DGKzginR.mjs:49
 listen @ dom_renderer-DGKzginR.mjs:691
 listenerInternal @ core.mjs:29478
 ɵɵlistener @ core.mjs:29362
-BooksComponent_div_5_Template @ books.component.ts:19
+BooksComponent_div_5_Template @ books.component.html:26
 executeTemplate @ core.mjs:12074
 renderView @ core.mjs:12560
 createAndRenderEmbeddedLView @ core.mjs:12627
@@ -127,7 +167,7 @@ writeToDirectiveInput @ core.mjs:12056
 setAllInputsForProperty @ core.mjs:12488
 elementPropertyInternal @ core.mjs:12190
 ɵɵproperty @ core.mjs:25427
-BooksComponent_Template @ books.component.ts:114
+BooksComponent_Template @ books.component.html:8
 executeTemplate @ core.mjs:12074
 refreshView @ core.mjs:13675
 detectChangesInView @ core.mjs:13887
@@ -201,4 +241,4 @@ globalZoneAwareCallback @ zone.js:1205
 books.component.ts:85 
             
             
-            POST http://localhost:2024/books/add 
+            POST http://localhost:2024/books/add net::ERR_FAILED
