@@ -23,3 +23,6 @@ public class WebConfig {
 spring.web.cors.allowed-origins=http://localhost:4200
 spring.web.cors.allowed-methods=GET,POST,PUT,DELETE
 spring.web.cors.allow-credentials=true
+
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'filterChain' defined in class path resource [com/cts/security/SecurityConfig.class]: Unsatisfied dependency expressed through method 'filterChain' parameter 0: Error creating bean with name 'org.springframework.security.config.annotation.web.configuration.HttpSecurityConfiguration': Unsatisfied dependency expressed through method 'setContentNegotiationStrategy' parameter 0: Error creating bean with name 'org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration$EnableWebMvcConfiguration': Unsatisfied dependency expressed through method 'setConfigurers' parameter 0: Error creating bean with name 'corsConfigurer' defined in class path resource [com/cts/security/WebConfig.class]: Failed to instantiate [org.springframework.web.servlet.config.annotation.WebMvcConfigurer]: Factory method 'corsConfigurer' threw exception with message: Unresolved compilation problem: 
+	Syntax error, insert ";" to complete BlockStatements
