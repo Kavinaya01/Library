@@ -1,26 +1,62 @@
-@PostMapping("/member")
-public ResponseEntity<?> memberLogin(@RequestBody LoginRequest loginRequest) {
-    Optional<Member> optionalMember = authService.getMemberByEmail(loginRequest.getEmail());
+package com.cts.security;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-    if (optionalMember.isPresent()) {
-        Member member = optionalMember.get();
+import java.security.Key;
+import java.util.Date;
 
-        if (passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
-            loginService.saveLogin(member.getMemberId(), member.getEmail(), "MEMBER");
+@Component
+public class JwtTokenUtil {
 
-            // ✅ ADD THIS: include name in token payload
-            String token = jwtUtil.generateToken(member.getEmail(), "ROLE_MEMBER", member.getName());
+    @Value("${jwt.secret}")
+    private String secret;
 
-            return ResponseEntity.ok(new AuthResponse(token,"MEMBER"));
-        }
-    }
+    private final long expirationTime = 86400000; // 1 day in ms
 
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid member credentials!");
-}
+    // Generate JWT token with email and role
+    public String generateToken(String email, String role) {
+        Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        return Jwts.builder()
+                .setSubject(email)
+                .claim("role", role)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
 
-public String generateToken(String email, String role, String memberName) {
-    Map<String, Object> claims = new HashMap<>();
-    claims.put("role", role);
-    claims.put("memberName", memberName); // 👈 included in JWT payload
-    return createToken(claims, email);
+    // Extract email from token
+    public String getEmailFromToken(String token) {
+        return parseToken(token).getBody().getSubject();
+    }
+    
+    public String extractUsername(String token) {
+        return parseToken(token).getBody().getSubject(); // Email is stored as 'subject'
+    }
+
+    // Extract role from token
+    public String getRoleFromToken(String token) {
+        return parseToken(token).getBody().get("role", String.class);
+    }
+
+    // Validate token
+    public boolean validateToken(String token) {
+        try {
+            parseToken(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    private Jws<Claims> parseToken(String token) {
+        Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token);
+    }
 }
