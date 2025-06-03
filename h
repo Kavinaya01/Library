@@ -1,7 +1,7 @@
 /* Main wrapper: full viewport height, dark plum gradient background */
 .main-wrapper {
   min-height: 100vh;
-  background: linear-gradient(to right, #1C1C1E, #4B0082); /* Dark to deep plum */
+  background: linear-gradient(to right, #1C1C1E, #4B0082);
   padding: 40px 20px;
   display: flex;
   justify-content: center;
@@ -15,8 +15,8 @@
   position: fixed;
   left: 0;
   top: 0;
-  bottom: 0;
-  width: 50%;
+  height: 100vh;      /* Full viewport height */
+  width: 50vw;        /* Half viewport width */
   object-fit: cover;
   z-index: -1;
 }
@@ -27,12 +27,12 @@
   border-radius: 20px;
   width: 100%;
   max-width: 600px;
-  padding: 40px;
+  padding: 40px 40px 20px; /* Reduce bottom padding to reduce space near footer */
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   z-index: 2;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start; /* Align content to top */
 }
 
 /* Logo inside header */
@@ -45,7 +45,7 @@
 
 /* Library title */
 .library-title {
-  color: #4B0082; /* Deep plum */
+  color: #4B0082;
   font-weight: 700;
   font-size: 1.5rem;
 }
@@ -113,6 +113,7 @@
   transition: background-color 0.3s ease, transform 0.3s ease;
   display: inline-block;
   width: 100%;
+  margin-bottom: 15px; /* add space below */
 }
 
 .btn-custom:disabled {
@@ -136,6 +137,7 @@
   text-decoration: underline;
   padding: 0;
   transition: color 0.3s ease, transform 0.3s ease;
+  margin-bottom: 20px; /* space after switch role button */
 }
 
 .btn-link:hover {
@@ -148,9 +150,9 @@
   background-color: transparent;
   font-size: 0.9rem;
   color: #B8B8D1;
-  margin-top: 50px;
+  margin-top: 0; /* removed extra margin */
   border-top: 1px solid #eee;
-  padding-top: 20px;
+  padding-top: 15px; /* smaller padding */
   text-align: center;
 }
 
@@ -220,4 +222,25 @@
 
 .fadeInUp {
   animation: fadeInUp 1s ease forwards;
+}
+
+/* New User Register button */
+.register-new-user-btn {
+  display: block;
+  width: 100%;
+  padding: 10px 0;
+  background-color: #eee;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  color: #4B0082;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 10px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.register-new-user-btn:hover {
+  background-color: #4B0082;
+  color: #fff;
 }
