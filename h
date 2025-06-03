@@ -177,4 +177,202 @@
 }
 
 
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../service/auth/auth.service';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-login',
+  standalone: false,
+  templateUrl:'./login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent {
+  loginForm!: FormGroup;
+
+  
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+    this.initializeForm();
+  }
+
+  private initializeForm() {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(3)]],
+      role: ['member', Validators.required] // Select role
+    });
+  }
+
+  get email() { return this.loginForm.get('email'); }
+  get password() { return this.loginForm.get('password'); }
+  get role() { return this.loginForm.get('role'); }
+
+  onLogin() {
+    if (this.loginForm.invalid) return;
+
+    const payload = {
+      email: this.loginForm.value.email.trim(),
+      password: this.loginForm.value.password
+    };
+
+    console.log('Sending login request:', payload);
+
+    if (this.loginForm.value.role === 'admin') {
+      this.authService.loginAdmin(payload).subscribe(
+        response => {
+          if (response.token) {
+            this.authService.storeToken(response.token);
+            this.authService.setCurrentMemberName(response.adminName);
+            alert('Admin login successful!');
+            this.router.navigate(['/admin-dashboard']);
+          } else {
+            alert('Invalid admin credentials!');
+          }
+        },
+        error => {
+          console.error('Login error:', error);
+          alert('Invalid admin credentials!');
+        }
+      );
+    } else {
+      this.authService.login(payload).subscribe(
+        response => {
+          if (response.token) {
+            this.authService.storeToken(response.token);
+            alert('Member login successful!');
+            this.authService.setCurrentMemberName(response.memberName); 
+            this.router.navigate(['/member-dashboard']);
+          } else {
+            alert('Invalid member credentials!');
+          }
+        },
+        error => {
+          console.error('Login error:', error);
+          alert('Invalid member credentials!');
+        }
+      );
+    }
+  }
+  switchRole(role: 'member' | 'admin') {
+    this.loginForm.patchValue({ role });
+  }
+  
+  
+}
+
+
+<div class="login-page d-flex align-items-center justify-content-center">
+  <img src="./login_bg.jpg" class="background-img" alt="Background" />
+
+  
+  <div class="container login-content-fade">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="login-card-wrapper" [class.flipped]="loginForm.value.role === 'admin'">
+          <div class="login-card">
+            <!-- Front: Member Login -->
+             
+            <div class="card-face card-front">
+
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center">
+                  <img src="./logoo.gif" alt="Logo" class="logo-img mr-2">
+                  <h4 class="mb-0 library-title font-weight-bold">Library System</h4>
+                </div>
+                <div>
+                  <a routerLink="/login" class="text-link me-3">Login</a>
+                  <a routerLink="/register" class="text-link">Register</a>
+                </div>
+              </div>
+              <h2 class="text-center mb-4">Member Login</h2>
+              <form [formGroup]="loginForm">
+                <input type="email" formControlName="email" class="form-control mb-2" placeholder="Email" />
+                <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
+                  Enter a valid email.
+                </div>
+
+                <input type="password" formControlName="password" class="form-control mb-2" placeholder="Password" />
+                <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
+                  Password must be at least 6 characters.
+                </div>
+
+                <button type="button" class="svg-btn w-100" [disabled]="loginForm.invalid" (click)="onLogin()">
+                  <svg width="277" height="62">
+                    <defs>
+                      <linearGradient id="skyGrad">
+                        <stop offset="0%" stop-color="#7ed6df" />
+                        <stop offset="100%" stop-color="#70a1ff" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="5" y="5" rx="25" fill="none" stroke="url(#skyGrad)" width="266" height="50"></rect>
+                  </svg>
+                  <span>Login</span>
+                </button>
+              </form>
+
+              <div class="switch-role text-center mt-3">
+                <button type="button" class="btn btn-link" (click)="switchRole('admin')">Switch to Admin</button>
+              </div>
+
+              <div class="register-link text-center">
+                Don't have an account? <a routerLink="/register">Register</a>
+              </div>
+            </div>
+
+            <!-- Back: Admin Login -->
+            <div class="card-face card-back">
+              
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center">
+                  <img src="./logoo.gif" alt="Logo" class="logo-img mr-2">
+                  <h4 class="mb-0 library-title font-weight-bold">Library System</h4>
+                </div>
+                <div>
+                  <a routerLink="/login" class="text-link me-3">Login</a>
+                  <a routerLink="/register" class="text-link">Register</a>
+                </div>
+              </div>
+              
+              <h2 class="text-center mb-4">Admin Login</h2>
+              <form [formGroup]="loginForm">
+                <input type="email" formControlName="email" class="form-control mb-2" placeholder="Admin Email" />
+                <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
+                  Enter a valid email.
+                </div>
+
+                <input type="password" formControlName="password" class="form-control mb-2" placeholder="Admin Password" />
+                <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
+                  Password must be at least 6 characters.
+                </div>
+
+                <button type="button" class="svg-btn w-100" [disabled]="loginForm.invalid" (click)="onLogin()">
+                  <svg width="277" height="62">
+                    <defs>
+                      <linearGradient id="skyGrad2">
+                        <stop offset="0%" stop-color="#7ed6df" />
+                        <stop offset="100%" stop-color="#70a1ff" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="5" y="5" rx="25" fill="none" stroke="url(#skyGrad2)" width="266" height="50"></rect>
+                  </svg>
+                  <span>Login</span>
+                </button>
+              </form>
+
+              <div class="switch-role text-center mt-3">
+                <button type="button" class="btn btn-link" (click)="switchRole('member')">Switch to Member</button>
+              </div>
+
+              <div class="register-link text-center">
+                Don't have an account? <a routerLink="/register">Register</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
