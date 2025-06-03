@@ -1,192 +1,135 @@
-<div class="main-wrapper d-flex justify-content-center align-items-center">
-  <div class="login-card-container">
-    <div class="flipper" [class.flipped]="isFlipped">
-
-      <!-- FRONT: MEMBER LOGIN -->
-      <div class="card-face front d-flex flex-column flex-md-row">
-        <div class="image-side d-none d-md-block">
-          <img src="./assets/member-login.png" alt="Member Illustration" />
-        </div>
-        <div class="form-side">
-          <div class="card-header">
-            <img src="./assets/logoo.gif" class="logo-img" alt="Logo" />
-            <h4 class="library-title">Library System</h4>
-          </div>
-          <h2>Member Login</h2>
-          <form [formGroup]="loginForm">
-            <input type="email" formControlName="email" placeholder="Email" />
-            <input type="password" formControlName="password" placeholder="Password" />
-            <button type="button" class="btn-custom" [disabled]="loginForm.invalid" (click)="onLogin()">Login</button>
-          </form>
-          <button class="btn-link mt-2" (click)="flipToAdmin()">Switch to Admin</button>
-        </div>
-      </div>
-
-      <!-- BACK: ADMIN LOGIN -->
-      <div class="card-face back d-flex flex-column flex-md-row">
-        <div class="image-side d-none d-md-block">
-          <img src="./assets/admin-login.png" alt="Admin Illustration" />
-        </div>
-        <div class="form-side">
-          <div class="card-header">
-            <img src="./assets/logoo.gif" class="logo-img" alt="Logo" />
-            <h4 class="library-title">Library System</h4>
-          </div>
-          <h2>Admin Login</h2>
-          <form [formGroup]="loginForm">
-            <input type="email" formControlName="email" placeholder="Admin Email" />
-            <input type="password" formControlName="password" placeholder="Admin Password" />
-            <button type="button" class="btn-custom" [disabled]="loginForm.invalid" (click)="onLogin()">Login</button>
-          </form>
-          <button class="btn-link mt-2" (click)="flipToMember()">Switch to Member</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-
-isFlipped = false;
-
-flipToAdmin() {
-  this.isFlipped = true;
-}
-
-flipToMember() {
-  this.isFlipped = false;
-}
-
-
 .main-wrapper {
   min-height: 100vh;
   background: linear-gradient(to right, #1C1C1E, #4B0082);
   padding: 40px 20px;
 }
 
-.login-card-container {
-  perspective: 1500px;
-  width: 100%;
-  max-width: 900px;
-}
-
-.flipper {
-  position: relative;
-  width: 100%;
-  transform-style: preserve-3d;
-  transition: transform 0.8s ease-in-out;
-}
-
-.flipper.flipped {
-  transform: rotateY(180deg);
-}
-
-.card-face {
-  position: absolute;
-  width: 100%;
-  min-height: 500px;
-  background: white;
+.home-card {
+  background-color: #ffffff;
   border-radius: 20px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  backface-visibility: hidden;
-  overflow: hidden;
-}
-
-.card-face.back {
-  transform: rotateY(180deg);
-}
-
-.image-side {
-  flex: 1;
-  background: #f7f7f7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-}
-
-.form-side {
-  flex: 1;
-  padding: 30px;
+  max-width: 95%;
+  width: 100%;
+  padding: 40px;
+  min-height: 80vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-  h2 {
-    margin-bottom: 20px;
-    color: #4B0082;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-
-    input {
-      margin-bottom: 12px;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-
-    .btn-custom {
-      background-color: #4B0082;
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 8px;
-      margin-top: 10px;
-      transition: background 0.3s;
-    }
-
-    .btn-custom:hover {
-      background-color: #6A0DAD;
-    }
-  }
-
-  .btn-link {
-    background: none;
-    border: none;
-    color: #4B0082;
-    text-decoration: underline;
-    cursor: pointer;
-  }
 }
 
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-
-  .logo-img {
-    width: 40px;
-    height: 40px;
-  }
-
-  .library-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #4B0082;
-  }
+.logo-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
-@media (max-width: 768px) {
-  .card-face {
-    flex-direction: column;
-  }
-
-  .image-side {
-    display: none !important;
-  }
-
-  .form-side {
-    padding: 20px;
-  }
+.highlight-text {
+  background: linear-gradient(90deg, #5e005e, #8e008e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
 }
+
+.btn-custom {
+  background-color: #4B0082;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.25rem;
+  transition: 0.3s ease-in-out;
+}
+
+.btn-custom:hover {
+  background-color: #6A0DAD;
+}
+
+.btn-animated {
+  transition: all 0.3s ease;
+}
+
+.btn-animated:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(75, 0, 130, 0.3);
+}
+
+.text-link {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #4B0082;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.text-link:hover {
+  color: #680064;
+  transform: scale(1.05);
+  text-decoration: underline;
+}
+
+.library-title {
+  color: #4B0082;
+}
+
+.card-footer {
+  background-color: transparent;
+  font-size: 0.9rem;
+  animation: fadeInUp 1s ease-in-out;
+  color: #B8B8D1;
+}
+
+<div class="main-wrapper d-flex justify-content-center align-items-center">
+  <div class="home-card shadow-lg p-4 fadeInUp">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="d-flex align-items-center">
+        <img src="./logoo.gif" alt="Logo" class="logo-img mr-2">
+        <h4 class="mb-0 library-title font-weight-bold">Library System</h4>
+      </div>
+      <div>
+        <a routerLink="/login" class="text-link me-3">Login</a>
+        <a routerLink="/register" class="text-link">Register</a>
+      </div>
+    </div>
+
+    <!-- Login Form Section -->
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h2 class="text-center mb-4 highlight-text">{{ loginForm.value.role === 'admin' ? 'Admin' : 'Member' }} Login</h2>
+        <form [formGroup]="loginForm">
+          <input type="email" formControlName="email" class="form-control mb-3" placeholder="Email" />
+          <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
+            Enter a valid email.
+          </div>
+
+          <input type="password" formControlName="password" class="form-control mb-3" placeholder="Password" />
+          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
+            Password must be at least 6 characters.
+          </div>
+
+          <button type="button" class="btn btn-custom w-100 btn-animated" [disabled]="loginForm.invalid" (click)="onLogin()">
+            Login
+          </button>
+        </form>
+
+        <!-- Switch Role Button -->
+        <div class="switch-role text-center mt-3">
+          <button type="button" class="btn btn-link" (click)="switchRole(loginForm.value.role === 'admin' ? 'member' : 'admin')">
+            Switch to {{ loginForm.value.role === 'admin' ? 'Member' : 'Admin' }}
+          </button>
+        </div>
+
+        <!-- Register Link -->
+        <div class="register-link text-center mt-3">
+          Don’t have an account? <a routerLink="/register">Register</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="card-footer text-center mt-5 pt-4 border-top">
+      <p class="mb-1 text-muted">© 2025 Library System. All rights reserved.</p>
+      <small class="text-muted">Designed with ❤️ for book lovers.</small>
+    </footer>
+
+  </div>
+</div>
