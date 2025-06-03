@@ -1,82 +1,8 @@
-.main-wrapper {
-  min-height: 100vh;
-  background: linear-gradient(to right, #1C1C1E, #4B0082);
-  padding: 40px 20px;
-}
-
-.home-card {
-  background-color: #ffffff;
-  border-radius: 20px;
-  max-width: 95%;
-  width: 100%;
-  padding: 40px;
-  min-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.logo-img {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-}
-
-.highlight-text {
-  background: linear-gradient(90deg, #5e005e, #8e008e);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: bold;
-}
-
-.btn-custom {
-  background-color: #4B0082;
-  color: #ffffff;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.25rem;
-  transition: 0.3s ease-in-out;
-}
-
-.btn-custom:hover {
-  background-color: #6A0DAD;
-}
-
-.btn-animated {
-  transition: all 0.3s ease;
-}
-
-.btn-animated:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(75, 0, 130, 0.3);
-}
-
-.text-link {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #4B0082;
-  text-decoration: none;
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.text-link:hover {
-  color: #680064;
-  transform: scale(1.05);
-  text-decoration: underline;
-}
-
-.library-title {
-  color: #4B0082;
-}
-
-.card-footer {
-  background-color: transparent;
-  font-size: 0.9rem;
-  animation: fadeInUp 1s ease-in-out;
-  color: #B8B8D1;
-}
-
 <div class="main-wrapper d-flex justify-content-center align-items-center">
+  <!-- Fixed Image on Left -->
+  <img src="./bg.png" alt="Library Illustration" class="fixed-side-img d-none d-md-block" />
+
+  <!-- Login Card -->
   <div class="home-card shadow-lg p-4 fadeInUp">
 
     <!-- Header -->
@@ -91,37 +17,62 @@
       </div>
     </div>
 
-    <!-- Login Form Section -->
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <h2 class="text-center mb-4 highlight-text">{{ loginForm.value.role === 'admin' ? 'Admin' : 'Member' }} Login</h2>
-        <form [formGroup]="loginForm">
-          <input type="email" formControlName="email" class="form-control mb-3" placeholder="Email" />
-          <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
-            Enter a valid email.
+    <!-- Flip Card Wrapper -->
+    <div class="flip-card-container">
+      <div class="flip-card-inner" [class.flipped]="loginForm.value.role === 'member'">
+
+        <!-- Front: Admin Login -->
+        <div class="flip-card-face flip-card-front">
+          <h2 class="text-center mb-4 highlight-text">Admin Login</h2>
+          <form [formGroup]="loginForm">
+            <input type="email" formControlName="email" class="form-control mb-3" placeholder="Admin Email" />
+            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
+              Enter a valid email.
+            </div>
+
+            <input type="password" formControlName="password" class="form-control mb-3" placeholder="Admin Password" />
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
+              Password must be at least 6 characters.
+            </div>
+
+            <button type="button" class="btn btn-custom w-100 btn-animated" [disabled]="loginForm.invalid" (click)="onLogin()">
+              Login
+            </button>
+          </form>
+
+          <div class="switch-role text-center mt-3">
+            <button type="button" class="btn btn-link" (click)="switchRole('member')">
+              Switch to Member
+            </button>
           </div>
-
-          <input type="password" formControlName="password" class="form-control mb-3" placeholder="Password" />
-          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
-            Password must be at least 6 characters.
-          </div>
-
-          <button type="button" class="btn btn-custom w-100 btn-animated" [disabled]="loginForm.invalid" (click)="onLogin()">
-            Login
-          </button>
-        </form>
-
-        <!-- Switch Role Button -->
-        <div class="switch-role text-center mt-3">
-          <button type="button" class="btn btn-link" (click)="switchRole(loginForm.value.role === 'admin' ? 'member' : 'admin')">
-            Switch to {{ loginForm.value.role === 'admin' ? 'Member' : 'Admin' }}
-          </button>
         </div>
 
-        <!-- Register Link -->
-        <div class="register-link text-center mt-3">
-          Don’t have an account? <a routerLink="/register">Register</a>
+        <!-- Back: Member Login -->
+        <div class="flip-card-face flip-card-back">
+          <h2 class="text-center mb-4 highlight-text">Member Login</h2>
+          <form [formGroup]="loginForm">
+            <input type="email" formControlName="email" class="form-control mb-3" placeholder="Email" />
+            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
+              Enter a valid email.
+            </div>
+
+            <input type="password" formControlName="password" class="form-control mb-3" placeholder="Password" />
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
+              Password must be at least 6 characters.
+            </div>
+
+            <button type="button" class="btn btn-custom w-100 btn-animated" [disabled]="loginForm.invalid" (click)="onLogin()">
+              Login
+            </button>
+          </form>
+
+          <div class="switch-role text-center mt-3">
+            <button type="button" class="btn btn-link" (click)="switchRole('admin')">
+              Switch to Admin
+            </button>
+          </div>
         </div>
+
       </div>
     </div>
 
@@ -133,3 +84,55 @@
 
   </div>
 </div>
+
+
+.fixed-side-img {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.home-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  z-index: 2;
+}
+
+/* Flip Card Styles */
+.flip-card-container {
+  perspective: 1000px;
+  min-height: 400px;
+  position: relative;
+}
+
+.flip-card-inner {
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.flip-card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-card-face {
+  backface-visibility: hidden;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.flip-card-front {
+  z-index: 2;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
