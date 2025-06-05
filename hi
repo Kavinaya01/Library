@@ -1,145 +1,91 @@
-import { Component, OnInit } from '@angular/core';
-import { BorrowService } from '../service/borrow.service';
-import { FineService, Fine } from '../service/fine.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { BrowserModule, provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { FormsModule , ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { LoginComponent } from './component/login/login.component';
+import { RegisterComponent } from './component/register/register.component';
+import { HomeComponent } from './component/home/home.component';
+import { AdminDashboardComponent } from './component/admin/admin-dashboard/admin-dashboard.component';
+import { BooksComponent } from './component/admin/books/books.component';
+import { MemberDashboardComponent } from './component/member/member-dashboard/member-dashboard.component';
+import { ViewBooksComponent } from './component/member/view-books/view-books.component';
+import { ManageMembersComponent } from './component/admin/manage-members/manage-members.component';
+import { BorrowHistoryComponent } from './component/admin/borrow-history/borrow-history.component';
+import { BorrowReturnComponent } from './component/member/borrow-return/borrow-return.component';
+import { NavbarComponent } from './component/member/navbar/navbar.component';
+import { ProfileCardComponent } from './component/member/profile-card/profile-card.component';
+import { FinesHistoryComponent } from './component/admin/fines-history/fines-history.component';
+import { ReturnFinesComponent } from './component/member/return-fines/return-fines.component';
 
-@Component({
-  selector: 'app-member-borrow-history',
-  templateUrl: './member-borrow-history.component.html',
-  styleUrls: ['./member-borrow-history.component.css']
+@NgModule({
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    RegisterComponent,
+    HomeComponent,
+    AdminDashboardComponent,
+    BooksComponent,
+    MemberDashboardComponent,
+    ViewBooksComponent,
+    ManageMembersComponent,
+    BorrowHistoryComponent,
+    BorrowReturnComponent,
+    NavbarComponent,
+    ProfileCardComponent,
+    FinesHistoryComponent,
+    ReturnFinesComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
+    HttpClientModule
+],
+  providers: [
+    provideClientHydration(withEventReplay())
+  ],
+  bootstrap: [AppComponent]
 })
-export class MemberBorrowHistoryComponent implements OnInit {
+export class AppModule { }
 
-  memberName: string = '';
-  memberPassword: string = '';
-  borrowHistory: any[] = [];
-  fines: Fine[] = [];
-  showPasswordInputForFineId: number | null = null;
-  passwordForm: FormGroup;
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { LoginComponent } from './component/login/login.component';
+import { RegisterComponent } from './component/register/register.component';
+import { AdminDashboardComponent } from './component/admin/admin-dashboard/admin-dashboard.component';
+import { authGuard } from './guards/auth.guard';
+import { HomeComponent } from './component/home/home.component';
+import { BooksComponent } from './component/admin/books/books.component';
+import { MemberDashboardComponent } from './component/member/member-dashboard/member-dashboard.component';
+import { ViewBooksComponent } from './component/member/view-books/view-books.component';
+import { ManageMembersComponent } from './component/admin/manage-members/manage-members.component';
+import { BorrowHistoryComponent } from './component/admin/borrow-history/borrow-history.component';
+import { BorrowReturnComponent } from './component/member/borrow-return/borrow-return.component';
+import { FinesHistoryComponent } from './component/admin/fines-history/fines-history.component';
+import { ReturnFinesComponent } from './component/member/return-fines/return-fines.component';
 
-  constructor(
-    private borrowService: BorrowService,
-    private fineService: FineService,
-    private fb: FormBuilder
-  ) {
-    this.passwordForm = this.fb.group({
-      password: ['', Validators.required]
-    });
-  }
+const routes: Routes = [
+ 
+  { path: '', component: HomeComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [authGuard] },
+  { path: 'member-dashboard', component: MemberDashboardComponent, canActivate: [authGuard]},
+  { path: 'admin-books', component: BooksComponent,canActivate:[authGuard]},
+  { path: 'member-books',component:ViewBooksComponent,canActivate: [authGuard]},
+  { path: 'manage-members', component: ManageMembersComponent,canActivate:[authGuard] },
+  { path: 'borrow-history',component:BorrowHistoryComponent,canActivate:[authGuard]},
+  { path: 'borrow-return',component: BorrowReturnComponent,canActivate: [authGuard]},
+  { path: 'fines-history', component:FinesHistoryComponent,canActivate:[authGuard]},
+  { path: 'return-fines',component:ReturnFinesComponent,canActivate:[authGuard]},
+  { path: '**', redirectTo: '' } 
+];
 
-  ngOnInit(): void {
-    this.memberName = localStorage.getItem('memberName') || '';
-    this.memberPassword = localStorage.getItem('memberPassword') || ''; // simulate for now
-    this.loadBorrowHistory();
-    this.loadFines();
-  }
-
-  loadBorrowHistory(): void {
-    this.borrowService.getHistoryByMember(this.memberName, 0).subscribe(
-      data => this.borrowHistory = data.content || data,
-      error => console.error('Error loading borrow history', error)
-    );
-  }
-
-  loadFines(): void {
-    this.fineService.getFineHistoryByMemberName(this.memberName, 0).subscribe(
-      data => this.fines = data.content || data,
-      error => console.error('Error loading fines', error)
-    );
-  }
-
-  returnBook(title: string): void {
-    this.borrowService.returnBook(title, this.memberName).subscribe(
-      () => {
-        alert("Book returned successfully.");
-        this.loadBorrowHistory();
-        this.loadFines();
-      },
-      error => alert("Error returning book.")
-    );
-  }
-
-  togglePasswordInput(fineId: number): void {
-    this.showPasswordInputForFineId = fineId;
-  }
-
-  payFine(fineId: number): void {
-    const enteredPassword = this.passwordForm.value.password;
-    if (enteredPassword === this.memberPassword) {
-      this.fineService.payFine(fineId).subscribe(
-        () => {
-          alert("Fine paid successfully.");
-          this.showPasswordInputForFineId = null;
-          this.loadFines();
-        },
-        error => alert("Error paying fine.")
-      );
-    } else {
-      alert("Incorrect password.");
-    }
-  }
-}
-
-
-<div class="container py-4">
-  <h2 class="text-white mb-4">Your Borrow History</h2>
-  <div class="row">
-    <div class="col-md-4 mb-4" *ngFor="let borrow of borrowHistory">
-      <div class="card shadow h-100">
-        <div class="card-body">
-          <h5 class="card-title">{{ borrow.book.title }}</h5>
-          <p class="card-text">
-            <strong>Borrowed On:</strong> {{ borrow.borrowDate }}<br>
-            <strong>Status:</strong> {{ borrow.status }}
-          </p>
-          <button class="btn btn-danger" (click)="returnBook(borrow.book.title)" [disabled]="borrow.status === 'returned'">
-            Return Book
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h2 class="text-white mt-5 mb-4">Your Fines</h2>
-  <div class="row">
-    <div class="col-md-4 mb-4" *ngFor="let fine of fines">
-      <div class="card bg-light shadow">
-        <div class="card-body">
-          <h5 class="card-title">Fine #{{ fine.fineId }}</h5>
-          <p class="card-text">
-            <strong>Amount:</strong> ₹{{ fine.amount }}<br>
-            <strong>Status:</strong> {{ fine.status }}<br>
-            <strong>Book:</strong> {{ fine.borrowTransaction.book.title }}
-          </p>
-
-          <div *ngIf="showPasswordInputForFineId === fine.fineId">
-            <form [formGroup]="passwordForm" (ngSubmit)="payFine(fine.fineId)">
-              <input type="password" class="form-control mb-2" formControlName="password" placeholder="Enter your password">
-              <button type="submit" class="btn btn-success btn-block" [disabled]="passwordForm.invalid">Confirm Payment</button>
-            </form>
-          </div>
-
-          <button *ngIf="fine.status !== 'paid' && showPasswordInputForFineId !== fine.fineId"
-                  class="btn btn-dark"
-                  (click)="togglePasswordInput(fine.fineId)">
-            Pay Fine
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-body {
-  background: linear-gradient(to right, #1C1C1E, #4B0082);
-}
-
-.card {
-  border-radius: 1rem;
-  transition: transform 0.2s ease-in-out;
-}
-
-.card:hover {
-  transform: scale(1.02);
-}
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
