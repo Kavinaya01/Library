@@ -1,108 +1,45 @@
-<div class="container">
-  <div class="back-button-container">
-    <button class="back-button" (click)="goToAdminDashboard()">⬅</button>
-  </div>
-
-  <h2 class="mb-4">Manage Books</h2>
-
-  <!-- Add Book Button -->
-  <div class="text-right mb-3">
-    <button class="btn btn-success" (click)="openAddBookModal()">➕ Add New Book</button>
-  </div>
-  <!-- Add/Edit Book Modal -->
-  <div *ngIf="showAddBookModal" class="modal fade show d-block" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header bg-success text-white">
-          <h5 class="modal-title">{{ isEditing ? 'Edit Book' : 'Add New Book' }}</h5>
-          <button type="button" class="close" (click)="closeAddBookModal()">&times;</button>
+<!-- Book Cards -->
+<div class="row">
+  <div class="col-sm-6 col-md-4 col-lg-3 mb-4" *ngFor="let book of filteredBooks">
+    <div class="flip-card" (click)="toggleFlip(book)">
+      <div class="flip-card-inner" [class.flipped]="book.isFlipped">
+        <!-- Front Side -->
+        <div class="flip-card-front shadow rounded bg-light text-center p-3 d-flex flex-column justify-content-center h-100">
+          <h5 class="fw-bold">
+            <i class="bi bi-book text-primary me-1"></i>{{ book.title }}
+          </h5>
+          <p class="text-muted">
+            <i class="bi bi-box-seam me-1"></i>Available: {{ book.availableCopies }}
+          </p>
         </div>
-        <div class="modal-body">
-          <form (ngSubmit)="isEditing ? updateBook() : addBook()">
-            <div class="form-group mb-2">
-              <label>Title:</label>
-              <input type="text" class="form-control" [(ngModel)]="bookForm.title" name="title" required>
-            </div>
-            <div class="form-group mb-2">
-              <label>Author:</label>
-              <input type="text" class="form-control" [(ngModel)]="bookForm.author" name="author" required>
-            </div>
-            <div class="form-group mb-2">
-              <label>Genre:</label>
-              <input type="text" class="form-control" [(ngModel)]="bookForm.genre" name="genre">
-            </div>
-            <div class="form-group mb-2">
-              <label>ISBN:</label>
-              <input type="text" class="form-control" [(ngModel)]="bookForm.isbn" name="isbn">
-            </div>
-            <div class="form-group mb-2">
-              <label>Year Published:</label>
-              <input type="number" class="form-control" [(ngModel)]="bookForm.yearPublished" name="yearPublished">
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" (click)="closeAddBookModal()">Cancel</button>
-              <button type="submit" class="btn btn-success">
-                {{ isEditing ? 'Update Book' : 'Add Book' }}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="search-bar d-flex justify-content-center mb-3">
-  
-    <input
-    type="text"
-    class="form-control w-50"
-    [(ngModel)]="searchQuery"
-    (input)="searchBooks()"
-    placeholder="Search books by any field..."
-  />
-  
-  
-    <button class="btn btn-primary ms-2" (click)="searchBooks()">Search</button>
-  </div>
-  
-  <!-- Not Found Message -->
-  <div *ngIf="notFoundMessage" class="alert alert-warning text-center mt-3">
-    {{ notFoundMessage }}
-  </div>
-  
-  
-  <!-- Book Cards -->
-  <div class="row">
-    <div class="col-md-4 mb-3" *ngFor="let book of filteredBooks">
-      <div class="card-container" (click)="toggleFlip(book)">
-        <div class="card h-100" [class.flipped]="book.isFlipped">
-          <!-- Front -->
-          <div class="card-front">
-            <h5 class="card-title">{{ book.title }}</h5>
-            <p class="card-text">Available Copies: {{ book.availableCopies }}</p>
+
+        <!-- Back Side -->
+        <div class="flip-card-back shadow rounded bg-white p-3 h-100 d-flex flex-column justify-content-between">
+          <div>
+            <p><i class="bi bi-person me-1 text-secondary"></i><strong>Author:</strong> {{ book.author }}</p>
+            <p><i class="bi bi-tags me-1 text-secondary"></i><strong>Genre:</strong> {{ book.genre }}</p>
+            <p><i class="bi bi-123 me-1 text-secondary"></i><strong>ISBN:</strong> {{ book.isbn }}</p>
+            <p><i class="bi bi-calendar me-1 text-secondary"></i><strong>Year:</strong> {{ book.yearPublished }}</p>
           </div>
-          <!-- Back -->
-          <div class="card-back">
-            <div class="card-body">
-              <p class="card-text">Author: {{ book.author }}</p>
-              <p class="card-text">Genre: {{ book.genre }}</p>
-              <p class="card-text">ISBN: {{ book.isbn }}</p>
-              <p class="card-text">Year: {{ book.yearPublished }}</p>
-              <button class="btn btn-warning me-2" (click)="editBook(book)">Edit</button>
-              <button class="btn btn-danger" (click)="deleteBook(book.id)">Delete</button>
-            </div>
+          <div class="mt-2 d-flex justify-content-between">
+            <button class="btn btn-warning btn-sm" (click)="editBook(book)">
+              <i class="bi bi-pencil-square me-1"></i>Edit
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="deleteBook(book.id)">
+              <i class="bi bi-trash me-1"></i>Delete
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<!--vani-->
 
 
 .back-button-container {
   position: absolute;
   top: 10px;
-  left: 10px; /* ✅ Position in the top-left corner */
+  left: 10px;
 }
 
 .back-button {
@@ -119,115 +56,86 @@
 .back-button:hover {
   background-color: #0056b3;
 }
- 
 
-.book-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* ✅ Smaller cards */
-    gap: 15px; /* ✅ Reduces space between cards */
-    justify-content: center;
-    padding: 15px;
+/* Flip Card Layout */
+.flip-card {
+  perspective: 1000px;
+  height: 280px;
+  cursor: pointer;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.flip-card-front {
+  background-color: #edf5fd;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.flip-card-back {
+  background-color: #f8f9fa;
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.flip-card-back p {
+  margin-bottom: 6px;
+}
+
+/* Search Bar */
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+}
+
+.search-bar input.form-control {
+  max-width: 400px;
+}
+
+.search-bar .btn {
+  white-space: nowrap;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+  .flip-card {
+    height: 250px;
   }
-  
-  .card-container {
-    width: 100%;
-    max-width: 220px; /* ✅ Smaller width */
-    height: 280px; /* ✅ Smaller height */
-    perspective: 1000px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
+}
+
+@media screen and (max-width: 576px) {
+  .flip-card {
+    height: 230px;
   }
-  
-  .card {
-    width: 100%;
-    height: 100%;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-    position: relative;
-    border-radius: 8px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .card-front,
-  .card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .card-front {
-    background: #edf5fd;
-    color: rgb(0, 0, 0);
-  }
-  
-  .card-back {
-    background: #f8f9fa;
-    color: black;
-    transform: rotateY(180deg);
-  }
-  
-  .card.flipped {
-    transform: rotateY(180deg);
-  }
-  
-  .search-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-  }
-  
-  .search-container {
-    display: flex;
-    align-items: center;
-    border: 2px solid #007bff;
-    border-radius: 8px;
-    padding: 5px;
-    background: white;
-  }
-  
-  .search-input {
-    border: none;
-    outline: none;
-    padding: 8px;
-    font-size: 16px;
-    width: 200px;
-  }
-  
-  .search-btn {
-    background: transparent;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #007bff;
-  }
-  
-  .filter-dropdown {
-    border: 2px solid #007bff;
-    border-radius: 8px;
-    padding: 8px;
-    font-size: 16px;
-  }
-  
-  /* ✅ Responsive adjustments for better spacing */
-  @media screen and (max-width: 768px) {
-    .book-container {
-      grid-template-columns: repeat(2, 1fr); /* ✅ 2 cards per row on smaller screens */
-    }
-  }
-  
-  @media screen and (max-width: 480px) {
-    .book-container {
-      grid-template-columns: 1fr; /* ✅ Single-column layout on mobile */
-    }
-  }
-  
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
