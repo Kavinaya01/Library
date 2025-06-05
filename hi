@@ -1,167 +1,189 @@
-import { Component, OnInit } from '@angular/core';
-import { MemberBorrowService } from './member-borrow-history.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-@Component({
-  selector: 'app-member-borrow-history',
-  templateUrl: './member-borrow-history.component.html',
-  styleUrls: ['./member-borrow-history.component.css']
-})
-export class MemberBorrowHistoryComponent implements OnInit {
-
-  borrowHistory: any[] = [];
-  fines: any[] = [];
-  memberName = ''; // Get from localStorage/session or AuthService
-  showPasswordInput: number | null = null;
-  passwordForm: FormGroup;
-
-  constructor(private service: MemberBorrowService, private fb: FormBuilder) {
-    this.passwordForm = this.fb.group({
-      password: ['', Validators.required]
-    });
-  }
-
-  ngOnInit(): void {
-    this.memberName = localStorage.getItem('memberName') || ''; // Replace with actual auth service
-    this.fetchBorrowHistory();
-    this.fetchFines();
-  }
-
-  fetchBorrowHistory() {
-    this.service.getBorrowHistory(this.memberName).subscribe(data => {
-      this.borrowHistory = data;
-    });
-  }
-
-  fetchFines() {
-    this.service.getFines(this.memberName).subscribe(data => {
-      this.fines = data.content;
-    });
-  }
-
-  returnBook(title: string) {
-    this.service.returnBook(title, this.memberName).subscribe(() => {
-      alert('Book returned!');
-      this.fetchBorrowHistory();
-      this.fetchFines();
-    });
-  }
-
-  togglePasswordInput(fineId: number) {
-    this.showPasswordInput = fineId;
-  }
-
-  payFine(fineId: number) {
-    const enteredPassword = this.passwordForm.value.password;
-    const actualPassword = localStorage.getItem('memberPassword'); // Simulated, replace with proper check
-
-    if (enteredPassword === actualPassword) {
-      this.service.payFine(fineId).subscribe(() => {
-        alert('Fine paid successfully!');
-        this.showPasswordInput = null;
-        this.fetchFines();
-      });
-    } else {
-      alert('Incorrect password!');
-    }
-  }
-}
-
-
-
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient,HttpHeaders} from '@angular/common/http';
+import { catchError, Observable, throwError } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class MemberBorrowService {
-  private baseUrl = 'http://localhost:8080/api'; // Update base URL
+export class BorrowService {
+  private baseUrl = 'http://localhost:2024';
+
+  constructor(private http: HttpClient) {}
+ 
+  
+  borrowBook(title: string, memberName: string): Observable<any> {
+    const token = localStorage.getItem('jwtToken'); // ✅ Retrieve stored token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`, // ✅ Attach token in request
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.baseUrl}/borrow/${title}/${memberName}`, {}, { headers });
+  }
+
+  returnBook(title: string, memberName: string): Observable<any> {
+    const token = localStorage.getItem('jwtToken'); // ✅ Retrieve stored token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`, // ✅ Attach token for authentication
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.baseUrl}/return/${title}/${memberName}`, {}, { headers });
+}
+
+
+  getHistoryByMember(memberName: string, page: number): Observable<any> {
+    const token = localStorage.getItem('jwtToken'); // ✅ Retrieve stored token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`, // ✅ Attach token for authentication
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.baseUrl}/borrow/history/${memberName}/${page}`, { headers });
+  }
+
+  getBorrowHistory(page: number, searchQuery?: string): Observable<any> {
+    const token = localStorage.getItem("jwtToken");
+    const headers = new HttpHeaders().set("Authorization", `Bearer ${token}`);
+  
+    let url = `${this.baseUrl}/borrow/all/${page}`;
+    
+    if (searchQuery && searchQuery.trim() !== '') {
+      url += `?searchQuery=${encodeURIComponent(searchQuery)}`;
+    }
+  
+    return this.http.get(url, { headers });
+  }
+  
+}
+import { Injectable } from '@angular/core';
+import { HttpClient,HttpHeaders} from '@angular/common/http';
+import { catchError, Observable, throwError } from 'rxjs';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class BorrowService {
+  private baseUrl = 'http://localhost:2024';
+
+  constructor(private http: HttpClient) {}
+ 
+  
+  borrowBook(title: string, memberName: string): Observable<any> {
+    const token = localStorage.getItem('jwtToken'); // ✅ Retrieve stored token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`, // ✅ Attach token in request
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.baseUrl}/borrow/${title}/${memberName}`, {}, { headers });
+  }
+
+  returnBook(title: string, memberName: string): Observable<any> {
+    const token = localStorage.getItem('jwtToken'); // ✅ Retrieve stored token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`, // ✅ Attach token for authentication
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.baseUrl}/return/${title}/${memberName}`, {}, { headers });
+}
+
+
+  getHistoryByMember(memberName: string, page: number): Observable<any> {
+    const token = localStorage.getItem('jwtToken'); // ✅ Retrieve stored token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`, // ✅ Attach token for authentication
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.baseUrl}/borrow/history/${memberName}/${page}`, { headers });
+  }
+
+  getBorrowHistory(page: number, searchQuery?: string): Observable<any> {
+    const token = localStorage.getItem("jwtToken");
+    const headers = new HttpHeaders().set("Authorization", `Bearer ${token}`);
+  
+    let url = `${this.baseUrl}/borrow/all/${page}`;
+    
+    if (searchQuery && searchQuery.trim() !== '') {
+      url += `?searchQuery=${encodeURIComponent(searchQuery)}`;
+    }
+  
+    return this.http.get(url, { headers });
+  }
+  
+}
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export interface Fine {
+  fineId: number;
+  amount: number;
+  status: string;
+  transactionDate: string;
+  paymentDate: string | null;
+  member: {
+    memberId: number;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    membershipStatus: string;
+    role: string;
+  };
+  borrowTransaction: {
+    borrowId: number;
+    borrowDate: string;
+    returnDate: string;
+    bookReturnOn: string | null;
+    status: string;
+    book: {
+      id: number;
+      title: string;
+      author: string;
+      genre: string;
+      isbn: string;
+      yearPublished: number;
+      status: string;
+    };
+  };
+}
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FineService {
+  private baseUrl = 'http://localhost:2024/fines'; // Adjust if needed
 
   constructor(private http: HttpClient) {}
 
-  getBorrowHistory(memberName: string) {
-    return this.http.get<any[]>(`${this.baseUrl}/borrow/history/${memberName}`);
-  }
-
-  returnBook(title: string, name: string) {
-    return this.http.post(`${this.baseUrl}/fine/return/${title}/${name}`, {});
-  }
-
-  getFines(name: string) {
-    return this.http.get<any>(`${this.baseUrl}/fine/${name}/0`);
-  }
-
-  payFine(fineId: number) {
-    return this.http.post(`${this.baseUrl}/fine/pay/${fineId}`, {});
-  }
-}
-
-
-
-<div class="container py-4">
-  <h2 class="mb-4 text-white">Borrow History</h2>
+  getAllFines(page: number): Observable<any> {
+    const token = localStorage.getItem('jwtToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any>(`${this.baseUrl}/overdue/${page}`,{headers});
   
-  <div class="row">
-    <div class="col-md-4 mb-4" *ngFor="let book of borrowHistory">
-      <div class="card shadow-lg h-100">
-        <div class="card-body">
-          <h5 class="card-title">{{ book.book.title }}</h5>
-          <p class="card-text">
-            <strong>Borrowed On:</strong> {{ book.borrowDate }}<br>
-            <strong>Status:</strong> {{ book.status }}
-          </p>
-          <button class="btn btn-danger" (click)="returnBook(book.book.title)" [disabled]="book.status === 'returned'">
-            Return Book
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  }
 
-  <h2 class="mt-5 mb-4 text-white">Fines</h2>
-  <div class="row">
-    <div class="col-md-4 mb-4" *ngFor="let fine of fines">
-      <div class="card bg-warning-subtle shadow">
-        <div class="card-body">
-          <h5 class="card-title">Fine #{{ fine.id }}</h5>
-          <p class="card-text">
-            <strong>Amount:</strong> ₹{{ fine.amount }}<br>
-            <strong>Status:</strong> {{ fine.status }}<br>
-            <strong>Due Date:</strong> {{ fine.dueDate }}
-          </p>
+  
+  getFineHistoryByMemberName(name: string, page: number): Observable<any> {
+    const token = localStorage.getItem('jwtToken'); // ✅ Retrieve stored token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`, // ✅ Attach token for authentication
+      'Content-Type': 'application/json'
+    });
+   return this.http.get<any>(`${this.baseUrl}/${name}/${page}`,{headers});    
+  }
+    
+  payFine(fineId: number): Observable<Fine> {
+   return this.http.post<Fine>(`${this.baseUrl}/pay/${fineId}`, {});
+ }
+      
 
-          <div *ngIf="showPasswordInput === fine.id">
-            <form [formGroup]="passwordForm" (ngSubmit)="payFine(fine.id)">
-           <input type="password" class="form-control mb-2" placeholder="Enter your password" formControlName="password">
-              <button class="btn btn-primary w-100" type="submit" [disabled]="passwordForm.invalid">Pay Fine</button>
-            </form>
-          </div>
-          
-          <button *ngIf="fine.status === 'unpaid' && showPasswordInput !== fine.id" class="btn btn-dark" (click)="togglePasswordInput(fine.id)">
-            Pay Fine
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-body {
-  background: linear-gradient(to right, #1C1C1E, #4B0082);
-}
-
-.card {
-  border-radius: 20px;
-  transition: transform 0.3s ease-in-out;
-}
-
-.card:hover {
-  transform: scale(1.03);
-}
-
-.card-body {
-  font-size: 16px;
 }
