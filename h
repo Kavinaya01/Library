@@ -314,3 +314,28 @@ export class ManageMembersComponent implements OnInit {
     </div>
   </div>
 </div>
+
+
+updateMember(memberId: number, updatedData: any) {
+  this.memberService.updateMember(memberId, updatedData).subscribe({
+    next: (response) => {
+      console.log("Update successful:", response);
+      alert("Member updated successfully!");
+
+      const index = this.members.findIndex(m => m.memberId === memberId);
+      if (index !== -1) {
+        // Preserve the memberId in the updated object
+        this.members[index] = {
+          ...this.members[index], // retain all old values including memberId
+          ...updatedData // overwrite updated fields only
+        };
+      }
+
+      this.closeEditModal();
+    },
+    error: (error) => {
+      console.error("Update failed:", error);
+      alert("Error updating member!");
+    }
+  });
+}
