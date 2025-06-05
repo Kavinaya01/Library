@@ -1,273 +1,167 @@
-import { Component } from '@angular/core';
-import { BookService } from '../../../service/book/book.service';
-import { FormsModule } from '@angular/forms';
-
-@Component({
-  selector: 'app-books',
-  standalone: false,
-  templateUrl: './books.component.html',
-  styleUrl: './books.component.css'
-})
-export class BooksComponent {
-  books: any[] = [];
-  filteredBooks: any[] = [];
-  
-  searchQuery: string = '';
-  selectedCategory: string = 'title'; 
-  selectedGenre: string = '';  
-  selectedAuthor: string = ''; 
-
-  genres: string[] = [];
-  authors: string[] = [];
-
-  bookForm = {
-    id: null,
-    title: '',
-    author: '',
-    genre: '',
-    isbn: '',
-    yearPublished: '',
-  };
-
-  isEditing: boolean = false;
-  showManageBooks: boolean = false; // ✅ Controls the visibility of the manage books card
-
-  constructor(private bookService: BookService) {}
-
-  ngOnInit() {
-    this.fetchBooks();
-  }
-
-  fetchBooks() {
-    this.bookService.getAllBooks(0).subscribe((data) => {
-      const bookMap = new Map();
-
-      data.content.forEach((book: any) => {
-        if (bookMap.has(book.title)) {
-          bookMap.get(book.title).availableCopies++;
-        } else {
-          bookMap.set(book.title, {
-            id: book.id,
-            title: book.title,
-            author: book.author,
-            genre: book.genre,
-            isbn: book.isbn,
-            yearPublished: book.yearPublished,
-            availableCopies: book.status === 'available' ? 1 : 0,
-            isFlipped: false,
-          });
-        }
-      });
-
-      this.books = Array.from(bookMap.values());
-      this.filteredBooks = this.books; 
-
-      this.genres = [...new Set(this.books.map(book => book.genre))];
-      this.authors = [...new Set(this.books.map(book => book.author))];
-    });
-  }
-
-  filterBooks() {
-    this.filteredBooks = this.books.filter((book) => {
-      const matchesSearch = book[this.selectedCategory]?.toLowerCase().includes(this.searchQuery.toLowerCase());
-      const matchesGenre = this.selectedGenre === '' || book.genre === this.selectedGenre;
-      const matchesAuthor = this.selectedAuthor === '' || book.author === this.selectedAuthor;
-      return matchesSearch && matchesGenre && matchesAuthor;
-    });
-  }
-
-  toggleFlip(book: any) {
-    book.isFlipped = !book.isFlipped;
-  }
-
-  addBook() {
-    console.log("Adding book:", this.bookForm); // ✅ Check form data
-    this.bookService.addBook(this.bookForm).subscribe({
-      next: (response) => {
-        console.log("API Response:", response.message);
-        alert(response.message);
-        this.fetchBooks();
-        this.resetForm();
-      },
-      error: (err) => {
-        console.error("Error adding book:", err);
-      }
-    });
-  }
-  
-  editBook(book: any) {
-    this.bookForm = { ...book };
-    this.isEditing = true;
-    this.showManageBooks = true; // ✅ Show manage books form when editing
-  }
-
-  updateBook() {
-    if (this.bookForm.id === null || this.bookForm.id === undefined) {
-      console.error("Cannot update book. ID is invalid.");
-      return;
-    }
-
-    this.bookService.updateBook(this.bookForm.id, this.bookForm).subscribe(() => {
-      this.fetchBooks();
-      this.resetForm();
-    });
-  }
-
-  deleteBook(id: number) {
-    this.bookService.deleteBook(id).subscribe(() => {
-      this.fetchBooks();
-    });
-  }
-
-  resetForm() {
-    this.bookForm = {
-      id: null,
-      title: '',
-      author: '',
-      genre: '',
-      isbn: '',
-      yearPublished: '',
-    };
-    this.isEditing = false;
-  }
-
-  toggleManageBooks() {
-    this.showManageBooks = !this.showManageBooks; // ✅ Show/hide manage books form
-  }
-}
 import { Component, OnInit } from '@angular/core';
-import { AdminService } from '../../../service/admin/admin.service';
+import { MemberBorrowService } from './member-borrow-history.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-admin-dashboard',
-  standalone:false,
-  templateUrl: './admin-dashboard.component.html',
-  styleUrls: ['./admin-dashboard.component.css']
+  selector: 'app-member-borrow-history',
+  templateUrl: './member-borrow-history.component.html',
+  styleUrls: ['./member-borrow-history.component.css']
 })
-export class AdminDashboardComponent implements OnInit {
-  admin: any = {};
+export class MemberBorrowHistoryComponent implements OnInit {
 
-  constructor(private adminService: AdminService) {}
+  borrowHistory: any[] = [];
+  fines: any[] = [];
+  memberName = ''; // Get from localStorage/session or AuthService
+  showPasswordInput: number | null = null;
+  passwordForm: FormGroup;
 
+  constructor(private service: MemberBorrowService, private fb: FormBuilder) {
+    this.passwordForm = this.fb.group({
+      password: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
-    this.adminService.getAdminDetails().subscribe({
-      next: (data) => {
-        console.log('Admin data:', data); // 👈 Add this
-        this.admin = data;
-      },
-      error: (err) => {
-        console.error('Failed to load admin details', err);
-      }
+    this.memberName = localStorage.getItem('memberName') || ''; // Replace with actual auth service
+    this.fetchBorrowHistory();
+    this.fetchFines();
+  }
+
+  fetchBorrowHistory() {
+    this.service.getBorrowHistory(this.memberName).subscribe(data => {
+      this.borrowHistory = data;
     });
   }
-  
-    
 
-  logout(): void {
-    localStorage.removeItem('token');
-    // redirect to login
+  fetchFines() {
+    this.service.getFines(this.memberName).subscribe(data => {
+      this.fines = data.content;
+    });
   }
-} <!-- Header -->
-<header class="header d-flex justify-content-between align-items-center p-3 bg-primary text-white">
-    <h4 class="mb-0">Library Management System</h4>
-      <div class="dropdown">
-        <img src="assets/profile.png" class="rounded-circle" width="40" height="40" role="button" data-bs-toggle="dropdown" aria-expanded="false" />
-        <ul class="dropdown-menu dropdown-menu-end">
-          <li><h6 class="dropdown-header">Admin Details</h6></li>
-          <li><span class="dropdown-item-text">Name: {{ admin.name }}</span></li>
-          <li><span class="dropdown-item-text">Email: {{ admin.email }}</span></li>
-          <li><span class="dropdown-item-text">Phone: {{ admin.phone }}</span></li>
-        </ul>
-      </div>
-  </header>
-  
-  <!-- Sidebar + Content -->
-  <div class="d-flex">
-    <!-- Sidebar -->
-    <nav class="sidebar bg-light p-3" style="width: 220px; height: 100vh;">
-      <ul class="nav flex-column">
-        <li class="nav-item">
-            <a class="nav-link" routerLink="/admin-books">📚 Manage Books</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/admin/members">👥 Manage Members</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/admin/fines">💰 Fines</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-danger" (click)="logout()">🚪 Logout</a>
-        </li>
-      </ul>
-    </nav>
-  
-    <!-- Main Content -->
-    <main class="p-4 flex-grow-1">
-      <router-outlet></router-outlet> 
-    </main>
-  </div>
-  import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './component/login/login.component';
-import { RegisterComponent } from './component/register/register.component';
-import { BorrowComponent } from './component/borrow/borrow.component';
-import { AdminDashboardComponent } from './component/admin/admin-dashboard/admin-dashboard.component';
-import { MemberDashboardComponent } from './component/member-dashboard/member-dashboard.component';
-import { authGuard } from './guards/auth.guard';
-import { HomeComponent } from './component/home/home.component';
-import { BooksComponent } from './component/admin/books/books.component';
 
-const routes: Routes = [
- 
-  { path: '', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [authGuard] },
-  { path: 'admin-books', component: BooksComponent,canActivate:[authGuard]},
-  { path: '**', redirectTo: '' } 
-];
+  returnBook(title: string) {
+    this.service.returnBook(title, this.memberName).subscribe(() => {
+      alert('Book returned!');
+      this.fetchBorrowHistory();
+      this.fetchFines();
+    });
+  }
 
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule {}
+  togglePasswordInput(fineId: number) {
+    this.showPasswordInput = fineId;
+  }
+
+  payFine(fineId: number) {
+    const enteredPassword = this.passwordForm.value.password;
+    const actualPassword = localStorage.getItem('memberPassword'); // Simulated, replace with proper check
+
+    if (enteredPassword === actualPassword) {
+      this.service.payFine(fineId).subscribe(() => {
+        alert('Fine paid successfully!');
+        this.showPasswordInput = null;
+        this.fetchFines();
+      });
+    } else {
+      alert('Incorrect password!');
+    }
+  }
+}
+
+
+
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BookService {
-  private baseUrl = 'http://localhost:2024/books';
+export class MemberBorrowService {
+  private baseUrl = 'http://localhost:8080/api'; // Update base URL
 
   constructor(private http: HttpClient) {}
 
-  getAllBooks(page: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/all/${page}`);
+  getBorrowHistory(memberName: string) {
+    return this.http.get<any[]>(`${this.baseUrl}/borrow/history/${memberName}`);
   }
 
-  addBook(book: any): Observable<any> {
-    const token = localStorage.getItem("jwtToken");
-    const headers = new HttpHeaders().set("Authorization", `Bearer ${token}`);
-
-    return this.http.post(`${this.baseUrl}/add`, book, { headers });
+  returnBook(title: string, name: string) {
+    return this.http.post(`${this.baseUrl}/fine/return/${title}/${name}`, {});
   }
 
-  updateBook(id: number, book: any): Observable<any> {
-    const token = localStorage.getItem("jwtToken");
-    const headers = new HttpHeaders().set("Authorization", `Bearer ${token}`);
-
-    return this.http.put(`${this.baseUrl}/update/${id}`, book, { headers });
+  getFines(name: string) {
+    return this.http.get<any>(`${this.baseUrl}/fine/${name}/0`);
   }
 
-  deleteBook(id: number): Observable<any> {
-    const token = localStorage.getItem("jwtToken");
-    const headers = new HttpHeaders().set("Authorization", `Bearer ${token}`);
-
-    return this.http.delete(`${this.baseUrl}/delete/${id}`, { headers });
+  payFine(fineId: number) {
+    return this.http.post(`${this.baseUrl}/fine/pay/${fineId}`, {});
   }
 }
 
+
+
+<div class="container py-4">
+  <h2 class="mb-4 text-white">Borrow History</h2>
+  
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let book of borrowHistory">
+      <div class="card shadow-lg h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ book.book.title }}</h5>
+          <p class="card-text">
+            <strong>Borrowed On:</strong> {{ book.borrowDate }}<br>
+            <strong>Status:</strong> {{ book.status }}
+          </p>
+          <button class="btn btn-danger" (click)="returnBook(book.book.title)" [disabled]="book.status === 'returned'">
+            Return Book
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="mt-5 mb-4 text-white">Fines</h2>
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let fine of fines">
+      <div class="card bg-warning-subtle shadow">
+        <div class="card-body">
+          <h5 class="card-title">Fine #{{ fine.id }}</h5>
+          <p class="card-text">
+            <strong>Amount:</strong> ₹{{ fine.amount }}<br>
+            <strong>Status:</strong> {{ fine.status }}<br>
+            <strong>Due Date:</strong> {{ fine.dueDate }}
+          </p>
+
+          <div *ngIf="showPasswordInput === fine.id">
+            <form [formGroup]="passwordForm" (ngSubmit)="payFine(fine.id)">
+           <input type="password" class="form-control mb-2" placeholder="Enter your password" formControlName="password">
+              <button class="btn btn-primary w-100" type="submit" [disabled]="passwordForm.invalid">Pay Fine</button>
+            </form>
+          </div>
+          
+          <button *ngIf="fine.status === 'unpaid' && showPasswordInput !== fine.id" class="btn btn-dark" (click)="togglePasswordInput(fine.id)">
+            Pay Fine
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+body {
+  background: linear-gradient(to right, #1C1C1E, #4B0082);
+}
+
+.card {
+  border-radius: 20px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.card-body {
+  font-size: 16px;
+}
